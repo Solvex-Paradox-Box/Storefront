@@ -1,0 +1,6 @@
+{
+  "name": "Autonomous B2B Solutions Marketplace",
+  "description": "Automated cross-platform procurement and logistics marketplace for B2B transactions with PayPal integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
