@@ -83,20 +83,20 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
         <div className="max-w-4xl space-y-3 relative z-10">
           <div className="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-semibold text-indigo-300">
             <Zap className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Solvex Paradox Engine • 105 Solved Paradoxes & 105 Ready-to-Go Templates</span>
+            <span>88 Solved Paradoxes (48 Proprietary + 40 Historical) • 105 World-First B2B Solutions & 105 Autonomous Businesses</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             Autonomous B2B Solutions & Business Templates Catalog
           </h1>
           <p className="text-sm text-slate-300 leading-relaxed">
-            Deploy 105 solutions featuring cryptographic paradox resolution and 105 turnkey autonomous business templates with real enterprise market pricing and native PayPal B2B settlement.
+            Deploy 105 world-first enterprise solutions unlocked by the 88 solved paradoxes, plus 105 turnkey autonomous business templates equipped with real B2B market pricing and native PayPal settlement.
           </p>
         </div>
       </div>
 
       {/* Main Filter Toolbar */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4">
-        {/* Top Toggle: All vs 105 Paradox Solutions vs 105 Business Templates */}
+        {/* Top Toggle: All vs 105 World-First Solutions vs 105 Business Templates */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
           <div className="flex items-center space-x-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
             <button
@@ -111,6 +111,7 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
             </button>
             <button
               onClick={() => handleTypeChange('Paradox Solution')}
+              title="105 World-First B2B Solutions unlocked by the 88 Solved Paradoxes (48 Proprietary + 40 Historical)"
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 ${
                 selectedType === 'Paradox Solution'
                   ? 'bg-indigo-600 text-white shadow'
@@ -118,10 +119,11 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
               }`}
             >
               <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span>105 Paradox Solutions</span>
+              <span>105 World-First B2B Solutions</span>
             </button>
             <button
               onClick={() => handleTypeChange('Autonomous Business Template')}
+              title="105 Turnkey Autonomous Business Templates built on the 88-Paradox AI Brain"
               className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 ${
                 selectedType === 'Autonomous Business Template'
                   ? 'bg-indigo-600 text-white shadow'
@@ -129,7 +131,7 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
               }`}
             >
               <Briefcase className="w-3.5 h-3.5 text-emerald-400" />
-              <span>105 Autonomous Templates</span>
+              <span>105 Autonomous Businesses</span>
             </button>
           </div>
 

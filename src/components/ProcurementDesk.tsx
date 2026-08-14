@@ -14,7 +14,7 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
   const [promptInput, setPromptInput] = useState('');
   const [targetBudget, setTargetBudget] = useState<number | ''>('');
   const [urgency, setUrgency] = useState<'Low' | 'Medium' | 'High' | 'Critical'>('Medium');
-  const [destinationPort, setDestinationPort] = useState('Port of Newark, NJ');
+  const [destinationPort, setDestinationPort] = useState('uarefake.space Private Enclave Cluster');
   
   const [loadingAi, setLoadingAi] = useState(false);
   const [aiResult, setAiResult] = useState<ProcurementAiResponse | null>(null);
@@ -22,9 +22,9 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
   const [createdPo, setCreatedPo] = useState<PurchaseOrder | null>(null);
 
   const samplePrompts = [
-    'Procure 300 heavy-duty hydraulic pump assemblies for oil rig maintenance, budget under $45,000.',
-    'Order 50 industrial power inverter units (50kW) with expedited air freight to Chicago Terminal.',
-    'Source 1,000 meters of stainless steel marine tubing with 3-day delivery and ISO 9001 compliance.'
+    'Procure 50 bdc-project-api-server sovereign microservice nodes with Neon DB vector synchronization for enterprise deployment.',
+    'Order 20 solvex-crystal-clear-black-box JIT software packaging container licenses with 380-char deterministic header verification.',
+    'Deploy 100 solvex-paradox-matrix-88 cognitive chamber computational kernels with instant PayPal escrow authorization.'
   ];
 
   const handleRunAiProcurement = async (customPrompt?: string) => {
@@ -37,7 +37,7 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
     setSelectedSupplier(null);
 
     try {
-      const res = await fetch('/api/gemini/procure', {
+      const res = await fetch('/api/daisy/procure', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -49,7 +49,7 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'AI procurement request failed');
+      if (!res.ok) throw new Error(data.error || 'Daisy Haminja autonomous procurement request failed');
 
       setAiResult(data);
       if (data.recommendedSuppliers && data.recommendedSuppliers.length > 0) {
@@ -93,18 +93,28 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
     <div className="space-y-6">
       {/* Header Banner */}
       <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 relative overflow-hidden shadow-xl">
-        <div className="flex items-start justify-between relative z-10">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 relative z-10">
           <div className="max-w-2xl space-y-2">
-            <div className="inline-flex items-center space-x-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-semibold px-3 py-1 rounded-full">
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Gemini Autonomous RFQ Engine</span>
+            <div className="inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full">
+              <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+              <span>Daisy Haminja Post-Agentic Autonomous Intelligence • bdc-project-api-server</span>
             </div>
             <h2 className="text-2xl font-extrabold text-white">
               Autonomous B2B Procurement Desk
             </h2>
             <p className="text-xs sm:text-sm text-slate-300">
-              State your operational material requirements in plain language. Solvex Gemini AI parses technical specs, polls virtual suppliers, ranks bids, and prepares PayPal purchase orders automatically.
+              State your operational material requirements in plain language. The proprietary <span className="text-purple-300 font-semibold">Daisy Haminja Post-Agentic Autonomous Intelligence</span> (operating via your self-hosted <span className="text-amber-300 font-mono">bdc-project-api-server</span> backend & Neon DB agent memory synchronization) parses technical specs, evaluates suppliers across the 88-Paradox Matrix, ranks bids, and prepares PayPal purchase orders automatically.
             </p>
+          </div>
+
+          <div className="bg-slate-950/90 border border-purple-500/40 rounded-xl p-3 text-[11px] font-mono space-y-1 shrink-0 text-slate-300">
+            <div className="flex items-center space-x-1.5 text-emerald-400 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Sovereign Brain Stack: ACTIVE</span>
+            </div>
+            <div>Core Engine: <span className="text-purple-300 font-semibold">Daisy Haminja (bdc)</span></div>
+            <div>Third-Party APIs: <span className="text-emerald-400 font-bold">NONE (100% Sovereign)</span></div>
+            <div>Agent Memory: <span className="text-cyan-300">Neon DB & Vector Sync</span></div>
           </div>
         </div>
       </div>
@@ -120,7 +130,7 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
             value={promptInput}
             onChange={(e) => setPromptInput(e.target.value)}
             rows={3}
-            placeholder="Describe what items or raw materials you need (e.g., 'Procure 200 industrial grade solar inverter controllers with sub-5 day delivery to Texas')..."
+            placeholder="Describe what digital software components, microservices, or licenses you need (e.g., 'Procure 50 bdc-project-api-server sovereign microservices with 380-char verified headers and Neon DB state sync')..."
             className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
           />
         </div>
@@ -150,33 +160,33 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
               type="number"
               value={targetBudget}
               onChange={(e) => setTargetBudget(e.target.value ? Number(e.target.value) : '')}
-              placeholder="e.g. 50000"
+              placeholder="e.g. 5000"
               className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-slate-400 mb-1">Destination Logistics Port</label>
+            <label className="block text-[11px] font-medium text-slate-400 mb-1">Target Enclave / Domain</label>
             <input
               type="text"
               value={destinationPort}
               onChange={(e) => setDestinationPort(e.target.value)}
-              placeholder="Port or Logistics Terminal"
+              placeholder="uarefake.space Enclave"
               className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] font-medium text-slate-400 mb-1">Fulfillment Urgency</label>
+            <label className="block text-[11px] font-medium text-slate-400 mb-1">Fulfillment Priority</label>
             <select
               value={urgency}
               onChange={(e: any) => setUrgency(e.target.value)}
               className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
             >
-              <option value="Low">Low (Standard Freight)</option>
-              <option value="Medium">Medium (Balanced)</option>
-              <option value="High">High (Priority Air/Ocean)</option>
-              <option value="Critical">Critical (Immediate Dispatch)</option>
+              <option value="Low">Standard Digital Delivery</option>
+              <option value="Medium">Balanced JIT Stream</option>
+              <option value="High">Priority JIT Container Stream</option>
+              <option value="Critical">Immediate Hot-Swap Enclave Cluster</option>
             </select>
           </div>
         </div>
@@ -191,7 +201,7 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
             {loadingAi ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                <span>Gemini AI Evaluating Suppliers & Bids...</span>
+                <span>dAIsy haMINJA AI Evaluating Suppliers & Bids...</span>
               </>
             ) : (
               <>

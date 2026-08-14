@@ -70,8 +70,8 @@ export const PayPalCheckoutModal: React.FC<PayPalCheckoutModalProps> = ({
   };
 
   const handleSimulatedExpressPay = async () => {
-    const mockId = `PP-EXPRESS-${Date.now()}`;
-    await handleCaptureOrder(mockId, payerEmailInput);
+    const sandboxOrderId = `PP-EXPRESS-${Date.now()}`;
+    await handleCaptureOrder(sandboxOrderId, payerEmailInput);
   };
 
   return (

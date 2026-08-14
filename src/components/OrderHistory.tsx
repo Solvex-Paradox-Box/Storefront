@@ -48,7 +48,16 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
 
       {/* Orders List */}
       <div className="space-y-4">
-        {orders.map((po) => {
+        {orders.length === 0 ? (
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center space-y-3">
+            <FileText className="w-10 h-10 text-slate-600 mx-auto" />
+            <h3 className="text-lg font-bold text-white">No Purchase Orders Found</h3>
+            <p className="text-xs text-slate-400 max-w-md mx-auto">
+              There are currently no active or historical purchase orders. Corporate procurement orders generated via live RFQ bidding or PayPal B2B Checkout will appear here automatically.
+            </p>
+          </div>
+        ) : (
+          orders.map((po) => {
           const isExpanded = expandedPoId === po.id;
           return (
             <div
@@ -132,6 +141,24 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
                     </div>
                   </div>
 
+                  {/* 380-Character Header & Node Assignment Info */}
+                  <div className="bg-slate-900/90 p-4 rounded-xl border border-indigo-900/40 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                        <span className="font-bold text-white text-[11px] uppercase tracking-wider">
+                          Company 380-Character Master Header & Assigned Node
+                        </span>
+                      </div>
+                      <span className="text-[10px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 px-2 py-0.5 rounded">
+                        NODE-01 / 380 CHARS
+                      </span>
+                    </div>
+                    <p className="font-mono text-[10.5px] text-slate-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800 select-all break-all leading-relaxed">
+                      SOLVEX-ENTERPRISE-380CHAR-HEADER::COMPANY-[UAREFAKE.COM ENTERPRISE GLOBAL]::SYSTEM-JIT-DISTRIBUTION::HASH-a8f9c2104e7b83d1059f3211e038294a772c10b984102938475a6b1029384756c9d81726354019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465::NODE-01
+                    </p>
+                  </div>
+
                   {/* Order Audit Event Log */}
                   <div className="space-y-2">
                     <h4 className="font-bold text-slate-400 uppercase tracking-wider text-[11px]">
@@ -156,7 +183,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
               )}
             </div>
           );
-        })}
+        }))}
       </div>
     </div>
   );

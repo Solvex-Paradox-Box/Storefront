@@ -40,8 +40,8 @@ export const AddSolutionModal: React.FC<AddSolutionModalProps> = ({
       vendor: vendor || 'Enterprise Partner',
       price: Number(price) || 0,
       pricingModel,
-      description: description || 'Autonomous enterprise system integration module.',
-      fullDescription: fullDescription || description || 'Autonomous enterprise system integration module.',
+      description: description || 'Autonomous enterprise system capability.',
+      fullDescription: fullDescription || description || 'Autonomous enterprise system capability.',
       paradoxResolution: itemType === 'Paradox Solution' ? paradoxResolution : undefined,
       features: featuresStr.split(',').map(f => f.trim()).filter(Boolean),
       specs: {

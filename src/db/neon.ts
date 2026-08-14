@@ -1,6 +1,6 @@
 import pg from 'pg';
 import { ALL_210_SOLUTIONS } from '../data/catalogGenerator.js';
-import { INITIAL_ORDERS, INITIAL_SHIPMENTS } from '../data/mockData.js';
+import { INITIAL_ORDERS, INITIAL_SHIPMENTS } from '../data/solvexData.js';
 import { PurchaseOrder, Shipment, SolutionItem } from '../types/index.js';
 
 const { Pool } = pg;
