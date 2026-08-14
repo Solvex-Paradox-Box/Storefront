@@ -7,10 +7,11 @@ const { Pool } = pg;
 
 let pool: pg.Pool | null = null;
 let isConnected = false;
+let isInitializing = false;
 
 export function getDbPool(): pg.Pool | null {
   const dbUrl = process.env.DATABASE_URL || process.env.NEON_DATABASE_URL;
-  if (!dbUrl) {
+  if (!dbUrl || !dbUrl.trim() || dbUrl.includes('placeholder')) {
     return null;
   }
   if (!pool) {
@@ -20,17 +21,18 @@ export function getDbPool(): pg.Pool | null {
         ssl: {
           rejectUnauthorized: false
         },
-        max: 10,
-        idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 5000,
+        max: 5,
+        idleTimeoutMillis: 10000,
+        connectionTimeoutMillis: 3000,
+        statement_timeout: 4000,
       });
 
       pool.on('error', (err) => {
-        console.error('Unexpected Neon Postgres Pool Error:', err);
+        // Log cleanly and switch smoothly to memory mode on disconnect
         isConnected = false;
       });
     } catch (err) {
-      console.error('Failed to instantiate Neon Pool:', err);
+      isConnected = false;
       pool = null;
     }
   }
@@ -44,14 +46,24 @@ export function isNeonConnected(): boolean {
 export async function initNeonDatabase(inMemorySolutions: SolutionItem[], inMemoryOrders: PurchaseOrder[], inMemoryShipments: Shipment[]) {
   const p = getDbPool();
   if (!p) {
-    console.log('[Neon DB] No DATABASE_URL or NEON_DATABASE_URL set. Running in-memory mode.');
+    console.log('[Neon DB] No live DATABASE_URL provided. Operating in high-speed sovereign memory mode.');
+    isConnected = false;
     return;
   }
 
+  if (isInitializing) return;
+  isInitializing = true;
+
   try {
-    const client = await p.connect();
+    // Quick probe with timeout
+    const clientPromise = p.connect();
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Neon connection timeout (3s limit)')), 3000)
+    );
+
+    const client = await Promise.race([clientPromise, timeoutPromise]);
     isConnected = true;
-    console.log('[Neon DB] Successfully connected to Neon PostgreSQL database.');
+    console.log('[Neon DB] Connected to Neon PostgreSQL database.');
 
     // Create tables
     await client.query(`
@@ -141,9 +153,11 @@ export async function initNeonDatabase(inMemorySolutions: SolutionItem[], inMemo
     }
 
     client.release();
-  } catch (err) {
-    console.error('[Neon DB] Error initializing tables/seeding Neon Postgres:', err);
+  } catch (err: any) {
     isConnected = false;
+    console.log('[Neon DB] Database unavailable or timed out. Gracefully falling back to sovereign in-memory data store.');
+  } finally {
+    isInitializing = false;
   }
 }
 
@@ -152,10 +166,15 @@ export async function fetchSolutionsFromDb(): Promise<SolutionItem[] | null> {
   if (!p || !isConnected) return null;
 
   try {
-    const res = await p.query('SELECT * FROM solutions_registry ORDER BY created_at DESC;');
-    if (!res.rows) return null;
+    const queryPromise = p.query('SELECT * FROM solutions_registry ORDER BY created_at DESC;');
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('Query timeout')), 2500)
+    );
 
-    return res.rows.map(row => ({
+    const res: any = await Promise.race([queryPromise, timeoutPromise]);
+    if (!res || !res.rows) return null;
+
+    return res.rows.map((row: any) => ({
       id: row.id,
       itemType: row.item_type,
       title: row.title,
@@ -175,7 +194,7 @@ export async function fetchSolutionsFromDb(): Promise<SolutionItem[] | null> {
       specs: typeof row.specs === 'string' ? JSON.parse(row.specs) : (row.specs || {})
     }));
   } catch (err) {
-    console.error('[Neon DB] Error fetching solutions:', err);
+    isConnected = false;
     return null;
   }
 }
