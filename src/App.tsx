@@ -345,16 +345,16 @@ export default function App() {
       {/* Domain Mode Context Indicator Banner */}
       <div className={`border-b py-2 px-4 text-xs font-mono transition-colors ${
         domainMode === 'com' 
-          ? 'bg-blue-950/40 border-blue-900/50 text-blue-300' 
+          ? 'bg-emerald-950/40 border-emerald-800/60 text-emerald-200' 
           : 'bg-purple-950/40 border-purple-900/50 text-purple-300'
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-2">
             {domainMode === 'com' ? (
               <>
-                <ShoppingBag className="w-3.5 h-3.5 text-blue-400" />
+                <ShoppingBag className="w-3.5 h-3.5 text-emerald-400" />
                 <span>
-                  <strong className="text-white">uarefake.com</strong> — Customer Storefront, 128-Item B2B Catalog, Instant PayPal Checkout & Tracking
+                  <strong className="text-white">YouAreFake.com (uarefake.com)</strong> — <span className="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold border border-emerald-500/40">● LIVE IN PRODUCTION</span> Customer Storefront, 128 B2B Solutions, Instant PayPal Checkout & Key Auto-Provisioning
                 </span>
               </>
             ) : (
@@ -368,8 +368,8 @@ export default function App() {
           </div>
 
           <div className="hidden sm:flex items-center space-x-2">
-            <span className="text-[11px] opacity-75">Architecture: Total Domain Partition</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[11px] opacity-75">Status: Operational (Zero Latency)</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
           </div>
         </div>
       </div>

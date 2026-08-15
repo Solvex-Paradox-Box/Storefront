@@ -89,17 +89,27 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="font-extrabold text-lg tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-200 to-fuchsia-400 font-mono">
                   SOLVEX
                 </span>
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold tracking-widest uppercase border ${
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold tracking-widest uppercase border flex items-center space-x-1 ${
                   domainMode === 'com'
-                    ? 'bg-blue-950/90 text-blue-300 border-blue-400/50'
+                    ? 'bg-emerald-950/90 text-emerald-300 border-emerald-400/50 shadow-sm shadow-emerald-500/20'
                     : 'bg-purple-950/90 text-purple-300 border-purple-400/50'
                 }`}>
-                  {domainMode === 'com' ? 'uarefake.com' : 'uarefake.space'}
+                  {domainMode === 'com' ? (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>YouAreFake.com • LIVE</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="w-1.5 h-1.5 rounded-full bg-purple-400 animate-pulse" />
+                      <span>uarefake.space</span>
+                    </>
+                  )}
                 </span>
               </div>
               <p className="text-[11px] text-cyan-400/80 font-mono hidden sm:block">
                 {domainMode === 'com'
-                  ? 'Public Customer Storefront • 128 Sovereign Solutions'
+                  ? 'Public Customer Storefront • 128 Sovereign Solutions • LIVE'
                   : 'Sovereign Admin & AI Control Plane • 88 Paradoxes'}
               </p>
             </div>
