@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SolutionItem } from '../types';
-import { Cpu, Truck, ShieldCheck, Radio, Layers, BarChart3, Star, Check, ArrowRight, Zap, Info, Filter, Layers3, Briefcase, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { Cpu, Truck, ShieldCheck, Radio, Layers, BarChart3, Star, Check, ArrowRight, Zap, Info, Filter, Layers3, Briefcase, ChevronLeft, ChevronRight, Plus, Eye } from 'lucide-react';
 import { AddSolutionModal } from './AddSolutionModal';
 
 interface SolutionCatalogProps {
@@ -12,13 +12,13 @@ interface SolutionCatalogProps {
 
 const getCategoryIcon = (iconName: string) => {
   switch (iconName) {
-    case 'Cpu': return <Cpu className="w-6 h-6 text-cyan-400" />;
-    case 'Truck': return <Truck className="w-6 h-6 text-emerald-400" />;
-    case 'ShieldCheck': return <ShieldCheck className="w-6 h-6 text-indigo-400" />;
-    case 'Radio': return <Radio className="w-6 h-6 text-rose-400" />;
-    case 'Layers': return <Layers className="w-6 h-6 text-amber-400" />;
-    case 'BarChart3': return <BarChart3 className="w-6 h-6 text-sky-400" />;
-    default: return <Cpu className="w-6 h-6 text-indigo-400" />;
+    case 'Cpu': return <Cpu className="w-5 h-5 text-cyan-400" />;
+    case 'Truck': return <Truck className="w-5 h-5 text-emerald-400" />;
+    case 'ShieldCheck': return <ShieldCheck className="w-5 h-5 text-indigo-400" />;
+    case 'Radio': return <Radio className="w-5 h-5 text-rose-400" />;
+    case 'Layers': return <Layers className="w-5 h-5 text-amber-400" />;
+    case 'BarChart3': return <BarChart3 className="w-5 h-5 text-sky-400" />;
+    default: return <Cpu className="w-5 h-5 text-cyan-400" />;
   }
 };
 
@@ -38,6 +38,7 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
 
   const categories = [
     'All',
+    'JIT Software Distribution',
     'Procurement AI',
     'Logistics Automation',
     'Customs & Compliance',
@@ -60,10 +61,8 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
   });
 
   const totalPages = Math.ceil(filteredSolutions.length / itemsPerPage) || 1;
-  const paginatedSolutions = filteredSolutions.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedSolutions = filteredSolutions.slice(startIndex, startIndex + itemsPerPage);
 
   const handleTypeChange = (type: 'All' | 'Paradox Solution' | 'Autonomous Business Template') => {
     setSelectedType(type);
@@ -77,82 +76,70 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Banner / Hero Section */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-4xl space-y-3 relative z-10">
-          <div className="inline-flex items-center space-x-2 bg-indigo-500/10 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-semibold text-indigo-300">
-            <Zap className="w-3.5 h-3.5 text-indigo-400" />
-            <span>88 Solved Paradoxes (48 Proprietary + 40 Historical) • 105 World-First B2B Solutions & 105 Autonomous Businesses</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Autonomous B2B Solutions & Business Templates Catalog
-          </h1>
-          <p className="text-sm text-slate-300 leading-relaxed">
-            Deploy 105 world-first enterprise solutions unlocked by the 88 solved paradoxes, plus 105 turnkey autonomous business templates equipped with real B2B market pricing and native PayPal settlement.
-          </p>
-        </div>
-      </div>
-
-      {/* Main Filter Toolbar */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4">
-        {/* Top Toggle: All vs 105 World-First Solutions vs 105 Business Templates */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
-          <div className="flex items-center space-x-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+      {/* Top Filter & Search Action Bar */}
+      <div className="bg-black/90 border border-cyan-500/40 rounded-2xl p-4 shadow-2xl shadow-cyan-950/40 backdrop-blur-md space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Solution Type Toggle Filters */}
+          <div className="flex items-center space-x-1.5 bg-slate-950 p-1 rounded-xl border border-cyan-500/30 overflow-x-auto">
             <button
               onClick={() => handleTypeChange('All')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all ${
                 selectedType === 'All'
-                  ? 'bg-indigo-600 text-white shadow'
+                  ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              All Items ({solutions.length})
+              All 128 Solutions ({solutions.length})
             </button>
             <button
               onClick={() => handleTypeChange('Paradox Solution')}
-              title="105 World-First B2B Solutions unlocked by the 88 Solved Paradoxes (48 Proprietary + 40 Historical)"
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center space-x-1.5 ${
                 selectedType === 'Paradox Solution'
-                  ? 'bg-indigo-600 text-white shadow'
+                  ? 'bg-amber-500 text-black shadow-md shadow-amber-500/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
               <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span>105 World-First B2B Solutions</span>
+              <span>Paradox Resolutions</span>
             </button>
             <button
               onClick={() => handleTypeChange('Autonomous Business Template')}
-              title="105 Turnkey Autonomous Business Templates built on the 88-Paradox AI Brain"
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center space-x-1.5 ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center space-x-1.5 ${
                 selectedType === 'Autonomous Business Template'
-                  ? 'bg-indigo-600 text-white shadow'
+                  ? 'bg-fuchsia-500 text-white shadow-md shadow-fuchsia-500/30'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
             >
-              <Briefcase className="w-3.5 h-3.5 text-emerald-400" />
-              <span>105 Autonomous Businesses</span>
+              <Briefcase className="w-3.5 h-3.5 text-fuchsia-400" />
+              <span>Autonomous Blueprints</span>
             </button>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <div className="text-xs font-mono text-slate-400">
-              Showing <span className="text-white font-bold">{filteredSolutions.length}</span> entries • <span className="text-emerald-400 font-semibold">uarefake.space AI Registry Sync</span>
+          <div className="flex items-center space-x-3 justify-between md:justify-end">
+            <div className="text-xs font-mono text-cyan-400/80">
+              Nexus Index: <span className="text-white font-bold">{filteredSolutions.length}</span> Active Nodes • <span className="text-cyan-300 font-semibold">uarefake.space Sync</span>
             </div>
+            <button
+              onClick={() => setIsAddModalOpen(true)}
+              className="bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/50 px-3 py-1.5 rounded-xl text-xs font-mono flex items-center space-x-1.5 transition-all shadow"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Register Node</span>
+            </button>
           </div>
         </div>
 
         {/* Category Pills */}
         <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none">
-          <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+          <Filter className="w-4 h-4 text-cyan-400 shrink-0" />
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => handleCategoryChange(cat)}
-              className={`px-3 py-1 rounded-xl text-xs font-medium transition-all whitespace-nowrap ${
+              className={`px-3 py-1 rounded-xl text-xs font-mono transition-all whitespace-nowrap ${
                 selectedCategory === cat
-                  ? 'bg-slate-800 text-indigo-300 border border-indigo-500/40'
-                  : 'bg-slate-950 hover:bg-slate-800 text-slate-400 border border-slate-800'
+                  ? 'bg-cyan-500 text-black font-bold border border-cyan-400 shadow-md shadow-cyan-500/20'
+                  : 'bg-slate-950 hover:bg-slate-900 text-slate-400 border border-slate-800'
               }`}
             >
               {cat}
@@ -161,219 +148,256 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
         </div>
       </div>
 
-      {/* Solutions Grid */}
+      {/* Solutions Grid - All 128 items each with custom Header Image */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {paginatedSolutions.map((item) => (
           <div
             key={item.id}
-            className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 flex flex-col justify-between transition-all hover:shadow-xl hover:shadow-indigo-950/30 group"
+            className="bg-black/90 border border-cyan-500/40 hover:border-cyan-400 rounded-2xl flex flex-col justify-between transition-all hover:shadow-2xl hover:shadow-cyan-950/60 group relative overflow-hidden backdrop-blur-md"
           >
-            <div>
-              {/* Item Top header */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="p-3 bg-slate-800/80 border border-slate-700/80 rounded-xl group-hover:bg-slate-800 transition-colors">
+            {/* Header Image for every single solution */}
+            <div className="relative h-44 w-full overflow-hidden bg-slate-950 border-b border-cyan-500/30">
+              <img
+                src={item.imageUrl || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80'}
+                alt={item.title}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-90 group-hover:brightness-100"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+              
+              {/* Category & Badge Overlay on Image Header */}
+              <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+                <div className="p-2 bg-black/80 backdrop-blur-md border border-cyan-500/50 rounded-xl shadow-lg">
                   {getCategoryIcon(item.iconName)}
                 </div>
                 <div className="flex flex-col items-end space-y-1">
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border ${
+                  <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full uppercase border shadow-md backdrop-blur-md ${
                     item.itemType === 'Paradox Solution'
-                      ? 'bg-amber-950/80 text-amber-300 border-amber-800/60'
-                      : 'bg-emerald-950/80 text-emerald-300 border-emerald-800/60'
+                      ? 'bg-amber-950/90 text-amber-300 border-amber-500/70'
+                      : 'bg-cyan-950/90 text-cyan-300 border-cyan-500/70'
                   }`}>
-                    {item.itemType === 'Paradox Solution' ? 'Paradox Solved' : 'Turnkey Template'}
+                    {item.itemType === 'Paradox Solution' ? '⚡ Paradox Solved' : '✨ Turnkey Matrix'}
                   </span>
                   {item.badge && (
-                    <span className="bg-indigo-950 text-indigo-300 border border-indigo-800/60 text-[9px] font-semibold uppercase px-2 py-0.5 rounded-full">
+                    <span className="bg-fuchsia-950/90 text-fuchsia-300 border border-fuchsia-800/70 text-[9px] font-mono font-semibold uppercase px-2 py-0.5 rounded-full shadow-md backdrop-blur-md">
                       {item.badge}
                     </span>
                   )}
                 </div>
               </div>
 
-              {/* Title & Category */}
-              <h3 className="text-base font-bold text-white group-hover:text-indigo-300 transition-colors mb-1">
-                {item.title}
-              </h3>
-              <p className="text-xs text-slate-400 mb-2">{item.vendor} • {item.category}</p>
-
-              {/* Description */}
-              <p className="text-xs text-slate-300 leading-relaxed line-clamp-2 mb-3">
-                {item.description}
-              </p>
-
-              {/* Paradox Resolution Box when applicable */}
-              {item.paradoxResolution && (
-                <div className="bg-amber-500/5 border border-amber-500/20 p-2.5 rounded-xl text-[11px] text-amber-200/90 space-y-1 mb-3">
-                  <span className="font-bold uppercase text-[9px] text-amber-400 block tracking-wider">
-                    Paradox Resolution:
-                  </span>
-                  <p className="line-clamp-2">{item.paradoxResolution}</p>
-                </div>
-              )}
-
-              {/* Features bullet list preview */}
-              <div className="space-y-1.5 mb-4">
-                {item.features.slice(0, 2).map((feat, idx) => (
-                  <div key={idx} className="flex items-center space-x-2 text-xs text-slate-300">
-                    <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="truncate">{feat}</span>
-                  </div>
-                ))}
+              {/* Node Title & Specs overlay on bottom edge of image */}
+              <div className="absolute bottom-2 left-3 right-3 z-10">
+                <div className="text-[10px] font-mono text-cyan-300 uppercase tracking-wider">{item.category}</div>
+                <h3 className="text-sm font-bold text-white font-mono truncate group-hover:text-cyan-300 transition-colors">
+                  {item.title}
+                </h3>
               </div>
             </div>
 
-            {/* Item Footer */}
-            <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            {/* Card Content Details */}
+            <div className="p-5 flex-1 flex flex-col justify-between">
               <div>
-                <div className="text-lg font-bold text-white">
-                  ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                <p className="text-xs text-slate-300 leading-relaxed line-clamp-2 mb-3">
+                  {item.description}
+                </p>
+
+                {/* Paradox Resolution Box when applicable */}
+                {item.paradoxResolution && (
+                  <div className="bg-amber-950/30 border border-amber-500/40 p-2.5 rounded-xl text-[11px] text-amber-200/90 space-y-1 mb-3">
+                    <span className="font-bold uppercase text-[9px] text-amber-400 block tracking-wider font-mono">
+                      Quantum Paradox Resolution:
+                    </span>
+                    <p className="line-clamp-2 font-mono text-[11px]">{item.paradoxResolution}</p>
+                  </div>
+                )}
+
+                {/* Features bullet list preview */}
+                <div className="space-y-1.5 mb-4">
+                  {item.features.slice(0, 2).map((feat, idx) => (
+                    <div key={idx} className="flex items-center space-x-2 text-xs text-slate-300">
+                      <Check className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                      <span className="truncate font-mono text-[11px]">{feat}</span>
+                    </div>
+                  ))}
                 </div>
-                <div className="text-[10px] text-slate-400 font-medium">{item.pricingModel}</div>
               </div>
 
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => setActiveDetailItem(item)}
-                  className="p-2 text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-700/80 rounded-xl transition-all"
-                  title="View Specs & Details"
-                >
-                  <Info className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => onSelectSolutionForPurchase(item)}
-                  className="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all shadow-md shadow-sky-500/20"
-                >
-                  <span className="font-semibold text-xs">PayPal Buy</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+              {/* Card Footer with Price and Actions */}
+              <div className="pt-4 border-t border-cyan-500/20 flex items-center justify-between">
+                <div>
+                  <div className="text-lg font-bold text-white font-mono">
+                    ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </div>
+                  <div className="text-[10px] text-cyan-400/70 font-mono font-medium">{item.pricingModel}</div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setActiveDetailItem(item)}
+                    className="p-2 text-cyan-400 hover:text-white bg-slate-900 border border-cyan-500/40 hover:bg-slate-800 rounded-xl transition-all"
+                    title="View Specs & Details"
+                  >
+                    <Info className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => onSelectSolutionForPurchase(item)}
+                    className="bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all shadow-lg shadow-cyan-500/30 active:scale-95"
+                  >
+                    <span className="font-mono text-xs">PayPal Deploy</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Pagination Controls */}
-      {totalPages > 1 && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-xs text-slate-400 font-mono">
-            Page <span className="text-white font-bold">{currentPage}</span> of <span className="text-white font-bold">{totalPages}</span>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              className="bg-slate-800 disabled:opacity-40 hover:bg-slate-700 text-slate-200 p-2 rounded-xl border border-slate-700 transition-all"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <div className="flex items-center space-x-1">
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const pageNum = i + 1;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => setCurrentPage(pageNum)}
-                    className={`w-8 h-8 text-xs font-bold rounded-xl transition-all ${
-                      currentPage === pageNum
-                        ? 'bg-indigo-600 text-white'
-                        : 'bg-slate-950 hover:bg-slate-800 text-slate-400'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-            </div>
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              className="bg-slate-800 disabled:opacity-40 hover:bg-slate-700 text-slate-200 p-2 rounded-xl border border-slate-700 transition-all"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
+      {/* Quantum Pagination Controls */}
+      <div className="flex items-center justify-between bg-black/90 border border-cyan-500/30 rounded-2xl p-4 text-xs font-mono">
+        <div className="text-slate-400">
+          Showing <span className="text-cyan-300 font-bold">{startIndex + 1}</span> to{' '}
+          <span className="text-cyan-300 font-bold">{Math.min(startIndex + itemsPerPage, filteredSolutions.length)}</span> of{' '}
+          <span className="text-white font-bold">{filteredSolutions.length}</span> Sovereign Solutions
         </div>
-      )}
 
-      {/* Solution Detail Modal */}
-      {activeDetailItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 text-slate-100 shadow-2xl relative">
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+            disabled={currentPage === 1}
+            className={`p-2 rounded-xl border transition-all ${
+              currentPage === 1
+                ? 'border-slate-800 text-slate-600 cursor-not-allowed'
+                : 'border-cyan-500/40 text-cyan-300 hover:bg-cyan-950'
+            }`}
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
             <button
-              onClick={() => setActiveDetailItem(null)}
-              className="absolute top-4 right-4 p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+              key={pg}
+              onClick={() => setCurrentPage(pg)}
+              className={`w-8 h-8 rounded-xl font-bold transition-all ${
+                currentPage === pg
+                  ? 'bg-cyan-500 text-black shadow-md shadow-cyan-500/30'
+                  : 'text-slate-400 hover:bg-slate-900 border border-transparent hover:border-slate-800'
+              }`}
             >
-              ✕
+              {pg}
             </button>
+          ))}
 
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="p-3 bg-slate-800 border border-slate-700 rounded-xl">
-                {getCategoryIcon(activeDetailItem.iconName)}
-              </div>
-              <div>
-                <span className="text-xs text-indigo-400 font-medium uppercase">{activeDetailItem.category}</span>
-                <h2 className="text-xl font-bold text-white">{activeDetailItem.title}</h2>
-              </div>
-            </div>
+          <button
+            onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className={`p-2 rounded-xl border transition-all ${
+              currentPage === totalPages
+                ? 'border-slate-800 text-slate-600 cursor-not-allowed'
+                : 'border-cyan-500/40 text-cyan-300 hover:bg-cyan-950'
+            }`}
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
-            <p className="text-sm text-slate-300 leading-relaxed mb-4">
-              {activeDetailItem.fullDescription}
-            </p>
-
-            {activeDetailItem.paradoxResolution && (
-              <div className="bg-amber-500/10 border border-amber-500/30 p-4 rounded-xl mb-6 space-y-1">
-                <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block">
-                  Cryptographic Paradox Resolution
-                </span>
-                <p className="text-xs text-amber-200">{activeDetailItem.paradoxResolution}</p>
-              </div>
-            )}
-
-            {/* Specifications Grid */}
-            <div className="mb-6">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Technical Specifications</h4>
-              <div className="grid grid-cols-2 gap-3 bg-slate-950 p-4 rounded-xl border border-slate-800/80 text-xs">
-                {Object.entries(activeDetailItem.specs).map(([key, value]) => (
-                  <div key={key}>
-                    <span className="text-slate-500 block">{key}</span>
-                    <span className="text-slate-200 font-medium">{value}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Full Features */}
-            <div className="mb-6">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Key Automation Features</h4>
-              <ul className="space-y-2">
-                {activeDetailItem.features.map((feat, i) => (
-                  <li key={i} className="flex items-center space-x-2 text-xs text-slate-200">
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>{feat}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Pricing & Checkout Action */}
-            <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-              <div>
-                <div className="text-2xl font-bold text-white">${activeDetailItem.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}</div>
-                <div className="text-xs text-slate-400">{activeDetailItem.pricingModel}</div>
-              </div>
-
+      {/* Solution Detail Modal with Full High-Res Header Image */}
+      {activeDetailItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fade-in">
+          <div className="bg-slate-950 border border-cyan-500/60 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto text-slate-100 shadow-2xl shadow-cyan-950/60 relative">
+            
+            {/* Modal Image Header Banner */}
+            <div className="relative h-56 w-full overflow-hidden bg-black border-b border-cyan-500/40">
+              <img
+                src={activeDetailItem.imageUrl || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1200&q=80'}
+                alt={activeDetailItem.title}
+                referrerPolicy="no-referrer"
+                className="w-full h-full object-cover filter brightness-90"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+              
               <button
-                onClick={() => {
-                  const item = activeDetailItem;
-                  setActiveDetailItem(null);
-                  onSelectSolutionForPurchase(item);
-                }}
-                className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm shadow-lg shadow-sky-500/20 transition-all flex items-center space-x-2"
+                onClick={() => setActiveDetailItem(null)}
+                className="absolute top-4 right-4 p-2 rounded-full text-white bg-black/70 hover:bg-black border border-cyan-500/40 transition-all z-20"
               >
-                <span>Checkout with PayPal</span>
-                <ArrowRight className="w-4 h-4" />
+                ✕
               </button>
+
+              <div className="absolute bottom-4 left-6 right-6 z-10">
+                <span className="text-xs font-mono text-cyan-400 font-bold uppercase tracking-wider block mb-1">
+                  {activeDetailItem.category} • {activeDetailItem.itemType}
+                </span>
+                <h2 className="text-2xl font-bold text-white font-mono">{activeDetailItem.title}</h2>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <p className="text-sm text-slate-300 leading-relaxed font-mono">
+                {activeDetailItem.fullDescription}
+              </p>
+
+              {activeDetailItem.paradoxResolution && (
+                <div className="bg-amber-950/40 border border-amber-500/40 p-4 rounded-2xl space-y-1">
+                  <span className="text-xs font-bold text-amber-400 uppercase tracking-wider block font-mono">
+                    ⚡ Quantum Cryptographic Paradox Resolution:
+                  </span>
+                  <p className="text-xs text-amber-200 font-mono">{activeDetailItem.paradoxResolution}</p>
+                </div>
+              )}
+
+              {/* Technical Specifications Grid */}
+              <div>
+                <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider font-mono mb-3">
+                  Node Technical Specifications
+                </h4>
+                <div className="grid grid-cols-2 gap-3 bg-black p-4 rounded-2xl border border-cyan-500/30 text-xs font-mono">
+                  {Object.entries(activeDetailItem.specs).map(([key, value]) => (
+                    <div key={key}>
+                      <span className="text-cyan-600 block text-[10px] uppercase">{key}</span>
+                      <span className="text-slate-200 font-medium">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Full Features */}
+              <div>
+                <h4 className="text-xs font-bold text-cyan-400 uppercase tracking-wider font-mono mb-3">
+                  Key Automation Entitlements
+                </h4>
+                <ul className="space-y-2">
+                  {activeDetailItem.features.map((feat, i) => (
+                    <li key={i} className="flex items-center space-x-2 text-xs text-slate-200 font-mono">
+                      <Check className="w-4 h-4 text-cyan-400 shrink-0" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Pricing & Checkout Action */}
+              <div className="pt-4 border-t border-cyan-500/30 flex items-center justify-between">
+                <div>
+                  <div className="text-2xl font-bold text-white font-mono">
+                    ${activeDetailItem.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </div>
+                  <div className="text-xs text-cyan-400 font-mono">{activeDetailItem.pricingModel}</div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    const item = activeDetailItem;
+                    setActiveDetailItem(null);
+                    onSelectSolutionForPurchase(item);
+                  }}
+                  className="bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold px-6 py-3 rounded-2xl text-sm font-mono shadow-xl shadow-cyan-500/30 transition-all flex items-center space-x-2 active:scale-95"
+                >
+                  <span>PayPal Instant Deploy</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

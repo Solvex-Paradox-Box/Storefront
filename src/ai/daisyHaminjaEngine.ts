@@ -164,7 +164,7 @@ export async function executeDaisyProcurementResolution(params: {
   const suppliers: SupplierBid[] = [
     {
       id: 'sup-solvex-01',
-      supplierName: 'solvex-paradox-box • Primary Enclave (Jessica Ites / Daisy Haminja)',
+      supplierName: 'solvex-paradox-box • Primary Enclave (Todd Jeffrey Ites Jr. - Sole Creator & Architect)',
       rating: 4.99,
       unitPrice: Math.round(baseUnitPrice * 0.95),
       totalPrice: Math.round(baseUnitPrice * 0.95 * estimatedQuantity),

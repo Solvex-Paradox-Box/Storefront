@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Header, ActiveTabType } from './components/Header';
+import { Header, ActiveTabType, DomainMode } from './components/Header';
 import { SolutionCatalog } from './components/SolutionCatalog';
 import { ProcurementDesk } from './components/ProcurementDesk';
 import { LogisticsHub } from './components/LogisticsHub';
@@ -17,9 +17,30 @@ import { PayPalCheckoutModal } from './components/PayPalCheckoutModal';
 import { SolutionItem, PurchaseOrder, Shipment, ERPIntegration } from './types';
 import { INITIAL_SOLUTIONS, INITIAL_ORDERS, INITIAL_SHIPMENTS, INITIAL_ERP_INTEGRATIONS } from './data/solvexData';
 import { CompanyNode, INITIAL_COMPANY_NODES, generate380CharHeader } from './utils/nodeHeader';
+import { Shield, ShoppingBag, Globe, ArrowRight, Brain, Server, CheckCircle2, Lock } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<ActiveTabType>('catalog');
+  // Domain mode: .com (User Storefront) vs .space (Admin Control Plane)
+  const [domainMode, setDomainMode] = useState<DomainMode>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const host = window.location.hostname.toLowerCase();
+        const hash = window.location.hash.toLowerCase();
+        const search = window.location.search.toLowerCase();
+        if (host.includes('space') || hash.includes('space') || search.includes('space')) {
+          return 'space';
+        }
+      }
+      return (localStorage.getItem('solvex_domain_mode') as DomainMode) || 'com';
+    } catch {
+      return 'com';
+    }
+  });
+
+  const [activeTab, setActiveTab] = useState<ActiveTabType>(() => {
+    return domainMode === 'space' ? 'brain' : 'catalog';
+  });
+
   const [searchQuery, setSearchQuery] = useState('');
 
   const [solutions, setSolutions] = useState<SolutionItem[]>(INITIAL_SOLUTIONS);
@@ -37,6 +58,13 @@ export default function App() {
     }
   });
   const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  const handleDomainModeChange = (mode: DomainMode) => {
+    setDomainMode(mode);
+    try {
+      localStorage.setItem('solvex_domain_mode', mode);
+    } catch {}
+  };
 
   const handleAuthenticateMaster = (success: boolean) => {
     if (success) {
@@ -291,12 +319,18 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased selection:bg-indigo-500 selection:text-white relative">
+    <div className="min-h-screen bg-black text-slate-100 font-sans antialiased selection:bg-cyan-500 selection:text-black relative overflow-x-hidden">
+      {/* Year 21010 Quantum Scanline & Matrix Backdrop */}
+      <div className="fixed inset-0 grid-matrix-21010 opacity-70 pointer-events-none z-0" />
+      <div className="fixed inset-0 scanline-overlay z-40 pointer-events-none opacity-30" />
+
       {/* Toast Notification Container */}
       <ToastNotification toasts={toasts} onDismiss={dismissToast} />
 
-      {/* Top Header */}
+      {/* Top Header with Domain Switcher */}
       <Header
+        domainMode={domainMode}
+        setDomainMode={handleDomainModeChange}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         searchQuery={searchQuery}
@@ -308,26 +342,51 @@ export default function App() {
         onLockAdmin={handleLockMaster}
       />
 
+      {/* Domain Mode Context Indicator Banner */}
+      <div className={`border-b py-2 px-4 text-xs font-mono transition-colors ${
+        domainMode === 'com' 
+          ? 'bg-blue-950/40 border-blue-900/50 text-blue-300' 
+          : 'bg-purple-950/40 border-purple-900/50 text-purple-300'
+      }`}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            {domainMode === 'com' ? (
+              <>
+                <ShoppingBag className="w-3.5 h-3.5 text-blue-400" />
+                <span>
+                  <strong className="text-white">uarefake.com</strong> — Customer Storefront, 128-Item B2B Catalog, Instant PayPal Checkout & Tracking
+                </span>
+              </>
+            ) : (
+              <>
+                <Shield className="w-3.5 h-3.5 text-emerald-400" />
+                <span>
+                  <strong className="text-white">uarefake.space</strong> — Admin & Sovereign Control Plane (88 Paradoxes, Daisy Forge, 380 Ledger, Sentinel Suite)
+                </span>
+              </>
+            )}
+          </div>
+
+          <div className="hidden sm:flex items-center space-x-2">
+            <span className="text-[11px] opacity-75">Architecture: Total Domain Partition</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          </div>
+        </div>
+      </div>
+
       {/* Main View Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        
+        {/* ========================================================================= */}
+        {/* USER FRONT STORE (.COM) TABS                                              */}
+        {/* ========================================================================= */}
+
         {activeTab === 'catalog' && (
           <SolutionCatalog
             solutions={solutions}
             searchQuery={searchQuery}
             onSelectSolutionForPurchase={handleOpenPaypalForSolution}
             onCustomItemAdded={(newItem) => setSolutions(prev => [newItem, ...prev])}
-          />
-        )}
-
-        {activeTab === 'forge' && (
-          <AppForgeBuilder
-            onDeployApp={handleForgeDeploy}
-          />
-        )}
-
-        {activeTab === 'blackbox' && (
-          <BlackBoxAudit
-            nodes={companyNodes}
           />
         )}
 
@@ -345,6 +404,66 @@ export default function App() {
           />
         )}
 
+        {activeTab === 'logistics' && (
+          <LogisticsHub
+            shipments={shipments}
+          />
+        )}
+
+        {activeTab === 'orders' && (
+          <OrderHistory
+            orders={orders}
+            onOpenPaypalForPo={handleOpenPaypalForPo}
+          />
+        )}
+
+        {/* ========================================================================= */}
+        {/* ADMIN & SOVEREIGN CONTROL PLANE (.SPACE) TABS                             */}
+        {/* ========================================================================= */}
+
+        {activeTab === 'brain' && (
+          isMasterAdmin ? (
+            <CognitiveBrainHub />
+          ) : (
+            <ProtectedControlView
+              title="88 Solved Paradoxes & Cognitive Brain Hub"
+              moduleName="Cognitive Axiom Engine & Sentinel Suite"
+              description="Chamber proofs, mathematical axiom matrices, and Sentinel Pre-Flight verification on uarefake.space require Sovereign Trustee authorization."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
+        {activeTab === 'forge' && (
+          isMasterAdmin ? (
+            <AppForgeBuilder
+              onDeployApp={handleForgeDeploy}
+            />
+          ) : (
+            <ProtectedControlView
+              title="Daisy AI App Forge Compiler"
+              moduleName="Post-Agentic JIT Engine"
+              description="JIT compilation, bytecode distribution, and automated Node assignments on uarefake.space are restricted to the Sovereign Trustee."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
+        {activeTab === 'blackbox' && (
+          isMasterAdmin ? (
+            <BlackBoxAudit
+              nodes={companyNodes}
+            />
+          ) : (
+            <ProtectedControlView
+              title="380-Byte Cryptographic Consensus Audit"
+              moduleName="Black Box Memory Ledger"
+              description="Cryptographic hash integrity, intrusion verification, and tamperproof telemetry on uarefake.space require Trustee clearance."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
         {activeTab === 'nodes' && (
           isMasterAdmin ? (
             <CompanyNodeTracker
@@ -354,17 +473,11 @@ export default function App() {
           ) : (
             <ProtectedControlView
               title="380-Char Node Fleet Registry"
-              moduleName="Hardware Node Registry"
+              moduleName="Hardware Node Registry (::NODE-01..03)"
               description="Live device node commands, 380-character cryptographic header rotation, and IP telemetry on uarefake.space are restricted to the Trustee."
               onOpenAuth={() => setAuthModalOpen(true)}
             />
           )
-        )}
-
-        {activeTab === 'logistics' && (
-          <LogisticsHub
-            shipments={shipments}
-          />
         )}
 
         {activeTab === 'integrations' && (
@@ -380,18 +493,11 @@ export default function App() {
           ) : (
             <ProtectedControlView
               title="ERP & Webhook Integrations"
-              moduleName="Enterprise Adapters"
+              moduleName="Enterprise Adapters (SAP, Oracle, NetSuite)"
               description="Live SAP, Oracle, and NetSuite production API credentials on uarefake.space require Trustee authorization."
               onOpenAuth={() => setAuthModalOpen(true)}
             />
           )
-        )}
-
-        {activeTab === 'orders' && (
-          <OrderHistory
-            orders={orders}
-            onOpenPaypalForPo={handleOpenPaypalForPo}
-          />
         )}
       </main>
 
@@ -418,16 +524,15 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-2">
             <span className="font-bold text-slate-300">Solvex Autonomous B2B Network</span>
-            <span>• Cross-Platform Procurement & Logistics Hub</span>
+            <span>• Cross-Platform Storefront (<span className="text-blue-400 font-mono">uarefake.com</span>) & Admin Control (<span className="text-purple-400 font-mono">uarefake.space</span>)</span>
           </div>
           <div className="flex items-center space-x-4">
             <span>Powered by PayPal B2B Settlement</span>
             <span>•</span>
-            <span className="text-indigo-300 font-medium font-mono">dAIsy haMINJA Sentinel Intelligence Protocol (Proprietary AI Engine)</span>
+            <span className="text-indigo-300 font-medium font-mono">dAIsy haMINJA Sentinel Intelligence Protocol</span>
           </div>
         </div>
       </footer>
     </div>
   );
 }
-

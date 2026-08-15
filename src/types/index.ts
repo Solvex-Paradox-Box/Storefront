@@ -15,6 +15,7 @@ export interface SolutionItem {
   features: string[];
   badge?: string;
   iconName: string;
+  imageUrl?: string;
   specs: Record<string, string>;
 }
 

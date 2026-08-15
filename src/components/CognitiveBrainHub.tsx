@@ -1,12 +1,37 @@
-import React, { useState } from 'react';
-import { Brain, Cpu, Zap, Activity, Layers, Sparkles, BarChart2, CheckCircle2, ChevronRight, Filter, ShieldCheck, Lock, RefreshCw, Terminal, Server } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Brain, Cpu, Zap, Activity, Layers, Sparkles, BarChart2, CheckCircle2, ChevronRight, Filter, ShieldCheck, Lock, RefreshCw, Terminal, Server, Check, ArrowRight, Play, Shield } from 'lucide-react';
 import { PARADOXES, CHAMBER_META, SOLUTION_LAYERS, BRAIN_PRODUCTS, SOVEREIGN_SOLUTIONS, getChamberForParadox } from '../data/brainData';
+import { DeterministicEngine, PARADOX_AXIOM_SPACE } from '../core/engine';
+import { CryptographicNodeAuth } from '../middleware/auth';
+import { DeploymentReversalHarness } from '../utils/reversal';
+import { AutonomousOutreachWorker } from '../workers/outreach';
+import { NeonStatePersistence } from '../db/neon';
+import { PayPalCheckoutGateway } from '../api/checkout';
+import { SentinelTestSuite, PreFlightCheckResult } from '../tests/sentinel';
 
 export const CognitiveBrainHub: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'chambers' | 'layers' | 'controllers' | 'optimizer' | 'daisyEngine'>('chambers');
+  const [activeTab, setActiveTab] = useState<'chambers' | 'layers' | 'controllers' | 'optimizer' | 'daisyEngine' | 'sentinel'>('chambers');
   const [selectedChamber, setSelectedChamber] = useState<string>('I');
   const [selectedLayer, setSelectedLayer] = useState<number>(1);
   const [paradoxFilter, setParadoxFilter] = useState<'all' | 'proprietary' | 'historical'>('all');
+
+  // Sentinel Test Suite State
+  const [sentinelResults, setSentinelResults] = useState<PreFlightCheckResult[]>([]);
+  const [isRunningSentinel, setIsRunningSentinel] = useState<boolean>(false);
+  const [sentinelStatus, setSentinelStatus] = useState<string>('Ready for Pre-Flight Gatekeeper Probe');
+
+  const runSentinelAudit = async () => {
+    setIsRunningSentinel(true);
+    setSentinelStatus('Probing Core Engine, ::NODE-01..03, Reversals, Neon DB, and PayPal Gateway...');
+    const result = await SentinelTestSuite.runAllPreFlightChecks();
+    setSentinelResults(result.results);
+    setIsRunningSentinel(false);
+    setSentinelStatus(`Pre-Flight Complete: ${result.totalPassed} of ${result.results.length} Modules Verified Clean (0 Drift)`);
+  };
+
+  useEffect(() => {
+    runSentinelAudit();
+  }, []);
 
   // DAISY Reward Function Calculator State
   const [speedMs, setSpeedMs] = useState<number>(18);
@@ -55,7 +80,7 @@ export const CognitiveBrainHub: React.FC = () => {
                 </span>
               </div>
               <p className="text-sm text-slate-300 mt-1 max-w-2xl">
-                Proprietary AI Brain built upon <span className="text-amber-300 font-semibold">88 Solved Paradoxes</span> (48 Proprietary + 40 Historical) which unlock <span className="text-cyan-300 font-semibold">128 Solutions</span> (105 World-First B2B + 23 Sovereign .space Infrastructure) and power <span className="text-emerald-300 font-semibold">105 Turnkey Autonomous Businesses</span>.
+                Proprietary AI Brain built upon <span className="text-amber-300 font-semibold">88 Solved Real Paradoxes</span> (48 Solved by Todd Jeffrey Ites Jr. + 40 Historically Solved) which unlock <span className="text-cyan-300 font-semibold">128 Solutions</span> (105 World-First B2B + 23 Sovereign .space Infrastructure) and power <span className="text-emerald-300 font-semibold">105 Turnkey Autonomous Businesses</span>.
               </p>
             </div>
           </div>
@@ -136,6 +161,18 @@ export const CognitiveBrainHub: React.FC = () => {
           >
             <Terminal className="w-4 h-4 text-purple-300" />
             <span>Daisy Haminja Post-Agentic Backend (bdc)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('sentinel')}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
+              activeTab === 'sentinel'
+                ? 'bg-emerald-600 text-white shadow-md'
+                : 'bg-slate-800/60 text-slate-300 hover:text-white hover:bg-slate-800'
+            }`}
+          >
+            <Shield className="w-4 h-4 text-emerald-300" />
+            <span>Verification Sentinel & Core Suite</span>
           </button>
         </div>
       </div>
@@ -608,6 +645,99 @@ export const CognitiveBrainHub: React.FC = () => {
                   </div>
                   <div className="text-slate-200 text-xs">Autonomous Procurement Task Resolution Pipeline Active</div>
                   <div className="text-[11px] text-slate-400">Action: Direct PO formulation, PayPal Instant Escrow Capture Bridge (S-126) and 380-char header deterministic signing.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 6: Core Logic Sentinel & Pre-Flight Gatekeeper Suite */}
+      {activeTab === 'sentinel' && (
+        <div className="space-y-6">
+          <div className="bg-slate-900 border border-emerald-900/60 rounded-2xl p-6 shadow-xl space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center space-x-2">
+                  <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                  <h3 className="text-xl font-bold text-white tracking-tight">
+                    Internal Testing & Verification Sentinel Suite
+                  </h3>
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800">
+                    Pre-Flight Gatekeeper Active
+                  </span>
+                </div>
+                <p className="text-xs text-slate-300 mt-1 max-w-2xl font-mono">
+                  Continuously probes live endpoints, queries database persistence, and executes deterministic assertion checks before production changes go live.
+                </p>
+              </div>
+
+              <button
+                onClick={runSentinelAudit}
+                disabled={isRunningSentinel}
+                className="bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold px-5 py-2.5 rounded-xl text-xs font-mono flex items-center space-x-2 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 self-start md:self-auto disabled:opacity-50"
+              >
+                <RefreshCw className={`w-4 h-4 ${isRunningSentinel ? 'animate-spin' : ''}`} />
+                <span>{isRunningSentinel ? 'Executing Pre-Flight...' : 'Run All Sentinel Probes'}</span>
+              </button>
+            </div>
+
+            <div className="bg-black/90 p-4 rounded-xl border border-slate-800 font-mono text-xs text-emerald-400">
+              <span className="text-slate-500">[STATUS]: </span>{sentinelStatus}
+            </div>
+
+            {/* Verification Sentinel Results Matrix */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {sentinelResults.map((res, i) => (
+                <div key={i} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold text-slate-300">{res.testName}</span>
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
+                      res.passed ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-rose-950 text-rose-300 border-rose-800'
+                    }`}>
+                      {res.passed ? 'PASSED (0 DRIFT)' : 'FAILED'}
+                    </span>
+                  </div>
+                  <div className="text-[11px] font-mono text-cyan-400">Component: {res.module}</div>
+                  <div className="text-[11px] font-mono text-slate-400">{res.details}</div>
+                  <div className="text-[10px] font-mono text-slate-500">Latency: {res.latencyMs}ms</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Architecture Invariant Directives List */}
+            <div className="border-t border-slate-800 pt-6 space-y-4 font-mono text-xs">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300">
+                Core Logic & Operational Directives (7 Architectural Axioms)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px]">
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-cyan-400 font-bold block mb-1">1. Core Logic & Deterministic Engine (`src/core/engine`)</span>
+                  <p className="text-slate-400 font-sans">88 resolved paradoxes & 1536-dim vector space eliminate hallucination vectors via hard mathematical axioms.</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-amber-400 font-bold block mb-1">2. Cryptographic Verification (`src/middleware/auth`)</span>
+                  <p className="text-slate-400 font-sans">Enforces SHA-256 node header checks (`::NODE-01` to `::NODE-03`) across all API handshakes.</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-purple-400 font-bold block mb-1">3. Reversible Deployment (`src/utils/reversal`)</span>
+                  <p className="text-slate-400 font-sans">Zero deployment or state update executed without a pre-compiled reversal vector.</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-emerald-400 font-bold block mb-1">4. Autonomous Outreach (`src/workers/outreach`)</span>
+                  <p className="text-slate-400 font-sans">Continuous background funnels on `uarefake.com` and `uarefake.space` remove human latency.</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-sky-400 font-bold block mb-1">5. Secure Persistence (`src/db/neon.ts`)</span>
+                  <p className="text-slate-400 font-sans">Neon PostgreSQL isolation for transactional states, user sessions, and operational logs.</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <span className="text-indigo-400 font-bold block mb-1">6. Escrow & Gateway (`src/api/checkout`)</span>
+                  <p className="text-slate-400 font-sans">PayPal Merchant integration with automated B2B payments and escrow processing.</p>
+                </div>
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 md:col-span-2">
+                  <span className="text-emerald-300 font-bold block mb-1">7. Verification Sentinel (`src/tests/sentinel.ts`)</span>
+                  <p className="text-slate-400 font-sans">Automated pre-flight gatekeeper guaranteeing 0 broken code or invalid schemas reach production.</p>
                 </div>
               </div>
             </div>

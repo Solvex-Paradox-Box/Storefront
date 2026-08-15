@@ -129,7 +129,7 @@ export const PARADOXES: Paradox[] = [
   { id: 85, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Quantum Zeno Dynamic Suspension Paradox", description: "Continuous measurement stops quantum state transitions; solved via non-demolition measurement intervals." },
   { id: 86, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Fermi Extraterrestrial Silence Paradox", description: "Vast cosmic probability vs zero signals; solved via the Great Filter, percolation theory, and sub-light energy limits." },
   { id: 87, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Unexpected Execution Surprise Paradox", description: "Backward induction predicting date of surprise; solved via formal epistemic logic distinguishing proof from belief." },
-  { id: 88, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Axiom Resolution vs Paradox Synthesis", description: "Terminal Sovereign Axiom: Synthesizes all 48 Proprietary + 40 Historical Paradoxes into the unified dAIsy haMINJA Sentinel Intelligence Protocol — unlocking 105 World-First B2B Solutions and 105 Autonomous Businesses." }
+  { id: 88, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Omnipresence vs Boundary Invariance Paradox", description: "Terminal Sovereign Resolution: Solved by Todd Jeffrey Ites Jr. by synthesizing continuous state invariance across 48 real proprietary and 40 classical paradoxes into a deterministic 1536-dimensional non-stochastic protocol." }
 ];
 
 // ── 105 SOVEREIGN SOLUTION LAYERS (UNLOCKED BY THE 88 SOLVED PARADOXES) ───────

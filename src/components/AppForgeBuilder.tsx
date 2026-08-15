@@ -136,13 +136,13 @@ export const AppForgeBuilder: React.FC<AppForgeBuilderProps> = ({ onDeployApp })
           <div className="space-y-2 max-w-3xl">
             <div className="inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full">
               <Hammer className="w-4 h-4 text-purple-400" />
-              <span>Native Daisy Haminja App Forge Suite • 23 Upgrades Integrated</span>
+              <span>Native Daisy Haminja App Forge Suite • Sovereign Upgrades</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               Daisy Haminja Custom JIT Application Forge
             </h2>
             <p className="text-sm text-slate-300 leading-relaxed">
-              Forge custom business logic applications, microservices, and autonomous agents directly into your company's node network. All <span className="text-amber-300 font-semibold">23 Sovereign Infrastructure Solutions</span> (S-106 through S-128), verified <span className="text-emerald-400 font-mono font-bold">380-character headers</span>, and eBPF sandbox verifications are compiled directly into every build.
+              Forge custom business logic applications, microservices, and autonomous agents directly into your company's node network. Sovereign Infrastructure Solutions (S-106 through S-128), verified <span className="text-emerald-400 font-mono font-bold">380-character headers</span>, and eBPF sandbox verifications are compiled directly into every build.
             </p>
           </div>
 
@@ -152,7 +152,7 @@ export const AppForgeBuilder: React.FC<AppForgeBuilderProps> = ({ onDeployApp })
               <span>JIT Bytecode Compiler Active</span>
             </div>
             <div>Engine: <span className="text-white">Daisy-Haminja-App-Forge</span></div>
-            <div>Infrastructure: <span className="text-amber-300 font-semibold">23 / 23 Solutions Active</span></div>
+            <div>Infrastructure: <span className="text-amber-300 font-semibold">Sovereign Solutions Active</span></div>
             <div>Target Pipeline: <span className="text-emerald-400">uarefake.com / uarefake.space</span></div>
           </div>
         </div>
@@ -222,13 +222,13 @@ export const AppForgeBuilder: React.FC<AppForgeBuilderProps> = ({ onDeployApp })
               </div>
             </div>
 
-            {/* 23 Sovereign Infrastructure Upgrades (Integrated) */}
+            {/* Sovereign Infrastructure Upgrades (Integrated) */}
             <div className="bg-slate-950/90 border border-amber-500/40 rounded-2xl p-5 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
                 <div>
                   <div className="flex items-center space-x-2">
                     <ShieldCheck className="w-5 h-5 text-amber-400" />
-                    <h4 className="text-sm font-bold text-white">23 Sovereign Infrastructure Upgrades (Layer 8: S-106 to S-128)</h4>
+                    <h4 className="text-sm font-bold text-white">Sovereign Infrastructure Upgrades (Layer 8: S-106 to S-128)</h4>
                   </div>
                   <p className="text-xs text-slate-400 mt-0.5">
                     Natively compiled into this build — powering zero-trust enclaves, 380-char headers, and autonomic healing.
@@ -240,7 +240,7 @@ export const AppForgeBuilder: React.FC<AppForgeBuilderProps> = ({ onDeployApp })
                   onClick={handleToggleAll23}
                   className="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 transition-all self-start sm:self-auto"
                 >
-                  {integrateAll23 ? 'All 23 Integrated ✓' : 'Select All 23'}
+                  {integrateAll23 ? 'All Integrated ✓' : 'Select All'}
                 </button>
               </div>
 

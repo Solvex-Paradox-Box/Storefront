@@ -45,6 +45,27 @@ export const DomainGuideModal: React.FC<DomainGuideModalProps> = ({ isOpen, onCl
           </span>
         </div>
 
+        {/* Official GitHub Repository Link */}
+        <div className="bg-slate-950 p-4 rounded-xl border border-indigo-500/40 flex items-center justify-between">
+          <div>
+            <div className="font-mono font-bold text-indigo-300 text-xs flex items-center space-x-1.5">
+              <span>Official GitHub Master Repository</span>
+            </div>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Solvex-Paradox-Box / Solvex-Paradox-Marketplace-B2B-Solutions
+            </p>
+          </div>
+          <a
+            href="https://github.com/Solvex-Paradox-Box/Solvex-Paradox-Marketplace-B2B-Solutions#solvex-paradox-marketplace--b2b-solutions"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center space-x-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-mono font-semibold transition-all shadow-sm"
+          >
+            <span>View Repo</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
+
         {/* Steps */}
         <div className="space-y-4 text-xs">
           <h4 className="font-bold text-slate-300 uppercase tracking-wider text-[11px]">

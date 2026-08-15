@@ -1,20 +1,11 @@
 {
-  "version": 2,
   "buildCommand": "npm run build",
-  "builds": [
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
     {
-      "src": "server.ts",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.ts"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/server.ts"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
