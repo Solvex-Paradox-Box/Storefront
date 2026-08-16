@@ -1,4 +1,4 @@
-import type { JitSoftwareArtifact } from "../utils/jitCompiler";
+import type { JitSoftwareArtifact } from "./utils/jitCompiler";
 
 // ==========================================
 // CORE PLATFORM & B2B MARKETPLACE TYPES

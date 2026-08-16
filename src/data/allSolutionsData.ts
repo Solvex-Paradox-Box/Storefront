@@ -301,16 +301,32 @@ export function generateAll128Solutions(): SolutionItem[] {
     ];
     const title = titles[i % titles.length];
 
+    const is88thSolution = index === 88;
+    const itemPrice = is88thSolution ? 0 : +(350 + ((index * 17) % 650)).toFixed(2);
+    const itemPricingModel = is88thSolution ? 'Free' : (index % 3 === 0 ? 'Monthly Subscription' : 'One-time');
+    const itemBadge = is88thSolution ? 'Free Test Solution' : (index % 5 === 0 ? 'Enterprise Pro' : index % 3 === 0 ? 'High Speed' : 'Sovereign Node');
+    const itemTitle = is88thSolution ? 'solvex-paradox-box/nist-sp-800-53-least-privilege-assigner' : title;
+    const itemCategory = is88thSolution ? 'Regulatory Compliance & SOC 2 Auditing' : domain.cat;
+    const itemDesc = is88thSolution
+      ? 'Temporarily elevates permissions only when executing highly critical system tasks, de-escalating immediately after. 100% Free for marketplace testing.'
+      : `Execution node resolving: ${paradoxTheme.toLowerCase()}.`;
+    const itemFullDesc = is88thSolution
+      ? 'The 88th Sovereign Solution resolving the Omnipresence vs Boundary Invariance Paradox. Pricing has been removed and set to 100% Free ($0.00) to guarantee seamless testing of the autonomous marketplace, instant passkey checkout, and JIT container distribution.'
+      : `A high-performance sovereign software solution engineering deterministic workflows in ${domain.cat}. Provides instant digital license dispatch, 380-node header verification, and automated settlement orchestration.`;
+    const itemParadox = is88thSolution
+      ? 'Resolves Omnipresence vs Boundary Invariance Paradox: Zero-barrier sovereign test harness with instant free licensing.'
+      : `Resolves the enterprise paradox: ${paradoxTheme}.`;
+
     result.push({
       id: `sol-${String(index).padStart(3, '0')}`,
       itemType: domain.type,
-      title: title,
-      category: domain.cat,
-      description: `Execution node resolving: ${paradoxTheme.toLowerCase()}.`,
-      fullDescription: `A high-performance sovereign software solution engineering deterministic workflows in ${domain.cat}. Provides instant digital license dispatch, 380-node header verification, and automated settlement orchestration.`,
-      paradoxResolution: `Resolves the enterprise paradox: ${paradoxTheme}.`,
-      price: +(350 + ((index * 17) % 650)).toFixed(2),
-      pricingModel: index % 3 === 0 ? 'Monthly Subscription' : 'One-time',
+      title: itemTitle,
+      category: itemCategory,
+      description: itemDesc,
+      fullDescription: itemFullDesc,
+      paradoxResolution: itemParadox,
+      price: itemPrice,
+      pricingModel: itemPricingModel,
       rating: +(4.80 + ((index * 7) % 20) / 100).toFixed(2),
       reviewsCount: 85 + ((index * 37) % 400),
       vendor: 'solvex-paradox-box (Todd Jeffrey Ites Jr. - Sole Verified Creator)',
@@ -327,7 +343,7 @@ export function generateAll128Solutions(): SolutionItem[] {
         `Automated PayPal escrow release and multi-party milestone locking`,
         `Deep telemetry hooks for uarefake.space command console`
       ],
-      badge: index % 5 === 0 ? 'Enterprise Pro' : index % 3 === 0 ? 'High Speed' : 'Sovereign Node',
+      badge: itemBadge,
       iconName: domain.icon,
       imageUrl,
       specs: {

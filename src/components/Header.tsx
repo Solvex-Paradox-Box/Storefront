@@ -10,10 +10,18 @@ export type DomainMode = 'com' | 'space';
 export type ActiveTabType = 
   | 'catalog' 
   | 'rfq' 
+  | 'marketplace-exchange'
   | 'procurement' 
   | 'logistics' 
   | 'orders'
+  | 'freedom-sim'
+  | 'daisy'
   | 'brain'
+  | 'sovereign-brain'
+  | 'paradox-box'
+  | 'registry-engine'
+  | 'mmtai-security'
+  | 'jit-build'
   | 'forge' 
   | 'blackbox' 
   | 'nodes' 
@@ -51,12 +59,12 @@ export const Header: React.FC<HeaderProps> = ({
   const handleSwitchDomain = (newMode: DomainMode) => {
     setDomainMode(newMode);
     if (newMode === 'com') {
-      if (!['catalog', 'rfq', 'procurement', 'logistics', 'orders'].includes(activeTab)) {
+      if (!['catalog', 'rfq', 'marketplace-exchange', 'procurement', 'logistics', 'orders'].includes(activeTab)) {
         setActiveTab('catalog');
       }
     } else {
-      if (!['brain', 'forge', 'blackbox', 'nodes', 'integrations'].includes(activeTab)) {
-        setActiveTab('brain');
+      if (!['daisy', 'brain', 'sovereign-brain', 'paradox-box', 'registry-engine', 'mmtai-security', 'jit-build', 'forge', 'blackbox', 'nodes', 'integrations'].includes(activeTab)) {
+        setActiveTab('daisy');
       }
     }
   };
@@ -219,6 +227,19 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>Solutions Catalog (128)</span>
               </button>
 
+              {/* B2B Marketplace Exchange (105 Solutions) */}
+              <button
+                onClick={() => setActiveTab('marketplace-exchange')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'marketplace-exchange'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-900/30 ring-1 ring-indigo-400'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                }`}
+              >
+                <Layers className="w-3.5 h-3.5 text-indigo-400" />
+                <span>B2B Exchange (105)</span>
+              </button>
+
               {/* RFQ Desk */}
               <button
                 onClick={() => setActiveTab('rfq')}
@@ -283,6 +304,34 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>[uarefake.space Admin]:</span>
               </div>
 
+              {/* Freedom SIM AI OS (SwarmOS Sovereign) */}
+              <button
+                onClick={() => setActiveTab('freedom-sim')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'freedom-sim'
+                    ? 'bg-gradient-to-r from-amber-400 via-rose-500 to-cyan-400 text-slate-950 font-bold shadow-md shadow-amber-500/40 ring-1 ring-amber-300'
+                    : 'text-amber-300 hover:text-white hover:bg-amber-500/20 border border-amber-500/30'
+                }`}
+              >
+                <Zap className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+                <span className="font-mono uppercase tracking-wider font-bold">Freedom SIM AI OS</span>
+                <span className="px-1 py-0.2 text-[9px] bg-black text-amber-300 rounded font-mono font-bold">SOVEREIGN</span>
+              </button>
+
+              {/* DAISY & Agate Core Engine */}
+              <button
+                onClick={() => setActiveTab('daisy')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'daisy'
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 ring-1 ring-amber-400 font-bold'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                }`}
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>DAISY & Agate Core (EVC/MMTAI)</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              </button>
+
               {/* Cognitive Brain Hub */}
               <button
                 onClick={() => setActiveTab('brain')}
@@ -293,8 +342,73 @@ export const Header: React.FC<HeaderProps> = ({
                 }`}
               >
                 <Brain className="w-3.5 h-3.5 text-purple-400" />
-                <span>Cognitive Brain (88 Paradoxes)</span>
+                <span>Cognitive Brain (88)</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </button>
+
+              {/* Sovereign Agentic Brain Mesh */}
+              <button
+                onClick={() => setActiveTab('sovereign-brain')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'sovereign-brain'
+                    ? 'bg-fuchsia-600 text-white shadow-md shadow-fuchsia-900/30 ring-1 ring-fuchsia-400 font-bold'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                }`}
+              >
+                <Network className="w-3.5 h-3.5 text-fuchsia-400" />
+                <span>Sovereign Brain Mesh</span>
+              </button>
+
+              {/* Paradox Box & Solvers */}
+              <button
+                onClick={() => setActiveTab('paradox-box')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'paradox-box'
+                    ? 'bg-rose-600 text-white shadow-md shadow-rose-900/30 ring-1 ring-rose-400'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+                <span>Paradox Box (105 Solvers)</span>
+              </button>
+
+              {/* Dialectic Registry & Solver Engine */}
+              <button
+                onClick={() => setActiveTab('registry-engine')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'registry-engine'
+                    ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/30 ring-1 ring-emerald-400'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                }`}
+              >
+                <Cpu className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Dialectic Registry 88</span>
+              </button>
+
+              {/* MMTAI Security Suite */}
+              <button
+                onClick={() => setActiveTab('mmtai-security')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'mmtai-security'
+                    ? 'bg-red-600 text-white shadow-md shadow-red-900/30 ring-1 ring-red-400'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-red-400" />
+                <span>MMTAI Security Suite</span>
+              </button>
+
+              {/* JIT AST Synthesizer */}
+              <button
+                onClick={() => setActiveTab('jit-build')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  activeTab === 'jit-build'
+                    ? 'bg-amber-600 text-white shadow-md shadow-amber-900/30 ring-1 ring-amber-400'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                }`}
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>JIT Software Synthesizer</span>
               </button>
 
               {/* Daisy AI Forge */}

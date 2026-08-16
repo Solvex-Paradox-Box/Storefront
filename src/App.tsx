@@ -10,13 +10,41 @@ import { AppForgeBuilder } from './components/AppForgeBuilder';
 import { BlackBoxAudit } from './components/BlackBoxAudit';
 import { RfqMarketplace } from './components/RfqMarketplace';
 import { CognitiveBrainHub } from './components/CognitiveBrainHub';
+import { DaisyPipelineHub } from './components/DaisyPipelineHub';
 import { SovereignAuthModal } from './components/SovereignAuthModal';
 import { ProtectedControlView } from './components/ProtectedControlView';
 import { ToastNotification, ToastMessage } from './components/ToastNotification';
 import { PayPalCheckoutModal } from './components/PayPalCheckoutModal';
-import { SolutionItem, PurchaseOrder, Shipment, ERPIntegration } from './types';
+import { MarketplaceView } from './components/MarketplaceView';
+import { AgentBrainView } from './components/AgentBrainView';
+import { ParadoxBoxView } from './components/ParadoxBoxView';
+import { AIRegistryViewer } from './components/AIRegistryViewer';
+import { MmtaiSecurityView } from './components/MmtaiSecurityView';
+import { JitBuildView } from './components/JitBuildView';
+import { FreedomSimView } from './components/FreedomSimView';
+import { 
+  SolutionItem, 
+  PurchaseOrder, 
+  Shipment, 
+  ERPIntegration,
+  MarketplaceListing,
+  MarketplaceBid,
+  AgentBrainState,
+  ParadoxAnomaly,
+  MMTAIPeer,
+  MMTAISecurityAudit,
+  JitBuildTask,
+  ExecutionLog,
+  BusinessTemplate
+} from './types';
 import { INITIAL_SOLUTIONS, INITIAL_ORDERS, INITIAL_SHIPMENTS, INITIAL_ERP_INTEGRATIONS } from './data/solvexData';
+import { INITIAL_MARKETPLACE_LISTINGS, INITIAL_MARKETPLACE_BIDS } from './engine/marketplaceEngine';
+import { INITIAL_BRAIN_STATE } from './engine/agenticBrainEngine';
+import { INITIAL_88_PARADOX_ANOMALIES } from './engine/paradoxEngine';
+import { INITIAL_MMTAI_PEERS, INITIAL_MMTAI_AUDITS } from './engine/mmtaiSecurityEngine';
+import { INITIAL_JIT_BUILD_TASKS } from './engine/jitBuildEngine';
 import { CompanyNode, INITIAL_COMPANY_NODES, generate380CharHeader } from './utils/nodeHeader';
+import { compileJitSoftwarePackage, JitSoftwareArtifact } from './utils/jitCompiler';
 import { Shield, ShoppingBag, Globe, ArrowRight, Brain, Server, CheckCircle2, Lock } from 'lucide-react';
 
 export default function App() {
@@ -48,6 +76,20 @@ export default function App() {
   const [shipments, setShipments] = useState<Shipment[]>(INITIAL_SHIPMENTS);
   const [integrations, setIntegrations] = useState<ERPIntegration[]>(INITIAL_ERP_INTEGRATIONS);
   const [companyNodes, setCompanyNodes] = useState<CompanyNode[]>(INITIAL_COMPANY_NODES);
+
+  // Solvex Paradox Marketplace & Autonomous Engine States
+  const [marketplaceListings, setMarketplaceListings] = useState<MarketplaceListing[]>(INITIAL_MARKETPLACE_LISTINGS);
+  const [marketplaceBids, setMarketplaceBids] = useState<MarketplaceBid[]>(INITIAL_MARKETPLACE_BIDS);
+  const [brainState, setBrainState] = useState<AgentBrainState>(INITIAL_BRAIN_STATE);
+  const [paradoxAnomalies, setParadoxAnomalies] = useState<ParadoxAnomaly[]>(INITIAL_88_PARADOX_ANOMALIES);
+  const [mmtaiPeers, setMmtaiPeers] = useState<MMTAIPeer[]>(INITIAL_MMTAI_PEERS);
+  const [mmtaiAudits, setMmtaiAudits] = useState<MMTAISecurityAudit[]>(INITIAL_MMTAI_AUDITS);
+  const [jitTasks, setJitTasks] = useState<JitBuildTask[]>(INITIAL_JIT_BUILD_TASKS);
+  const [engineLogs, setEngineLogs] = useState<ExecutionLog[]>([]);
+
+  const handleAddEngineLog = (log: ExecutionLog) => {
+    setEngineLogs(prev => [log, ...prev].slice(0, 200));
+  };
 
   // Sovereign Trustee Master Authorization
   const [isMasterAdmin, setIsMasterAdmin] = useState<boolean>(() => {
@@ -123,44 +165,44 @@ export default function App() {
   // Initial backend fetch
   useEffect(() => {
     fetch('/api/solutions')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && setSolutions(data))
       .catch(() => {});
 
     fetch('/api/orders')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && setOrders(data))
       .catch(() => {});
 
     fetch('/api/shipments')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && setShipments(data))
       .catch(() => {});
 
     fetch('/api/integrations')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && setIntegrations(data))
       .catch(() => {});
 
     fetch('/api/nodes')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && data.length > 0 && setCompanyNodes(data))
       .catch(() => {});
   }, []);
 
   const refreshOrdersAndShipments = () => {
     fetch('/api/orders')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && setOrders(data))
       .catch(() => {});
 
     fetch('/api/shipments')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && setShipments(data))
       .catch(() => {});
 
     fetch('/api/nodes')
-      .then(res => res.json())
+      .then(res => res.json().catch(() => null))
       .then(data => Array.isArray(data) && data.length > 0 && setCompanyNodes(data))
       .catch(() => {});
   };
@@ -266,33 +308,37 @@ export default function App() {
     });
   };
 
-  const handlePaymentSuccess = ({ orderId, payerEmail }: { orderId: string; payerEmail: string }) => {
+  const handlePaymentSuccess = ({ orderId, payerEmail, jitArtifact }: { orderId: string; payerEmail: string; jitArtifact?: JitSoftwareArtifact }) => {
     const nextNodeNum = `NODE-${String(companyNodes.length + 1).padStart(2, '0')}`;
     const nodeHeader380 = generate380CharHeader(nextNodeNum);
 
     if (itemToPay) {
+      const artifact = jitArtifact || compileJitSoftwarePackage(itemToPay, nextNodeNum, payerEmail);
+
       // Create a Purchase Order for the purchased solution item
       const solutionPo: PurchaseOrder = {
         id: `po-sol-${Date.now()}`,
         poNumber: `PO-SOL-${Math.floor(1000 + Math.random() * 9000)}`,
         title: itemToPay.title,
-        itemDescription: `License Deployment (${itemToPay.pricingModel})`,
+        itemDescription: `JIT Custom Software License (${itemToPay.pricingModel})`,
         quantity: 1,
         unitPrice: itemToPay.price,
         totalAmount: itemToPay.price,
         currency: 'USD',
-        status: 'In Transit',
+        status: 'Completed',
         supplierName: itemToPay.vendor,
-        shippingAddress: 'Cloud Deployment Container Endpoint',
-        destinationPort: 'API Cloud Instance',
-        carrier: 'Solvex Instant Auto-Provisioning',
-        trackingNumber: `SOLVEX-KEY-${Math.floor(100000 + Math.random() * 900000)}`,
+        shippingAddress: 'Cloud Deployment Container Endpoint (uarefake.space)',
+        destinationPort: 'API Cloud Instance / Docker Registry',
+        carrier: 'Solvex JIT Bytecode Compiler',
+        trackingNumber: artifact.licenseKey,
         createdAt: new Date().toISOString(),
         paypalOrderId: orderId,
         paypalPaymentStatus: 'COMPLETED',
         paypalPayerEmail: payerEmail,
+        jitArtifact: artifact,
         logs: [
-          { timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16), message: `PayPal payment captured ($${itemToPay.price}). 380-char header assigned to ${nextNodeNum}.`, type: 'success' }
+          { timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16), message: itemToPay.price === 0 ? `Free test license fulfilled ($0.00). JIT software package compiled for ${nextNodeNum}.` : `PayPal payment captured ($${itemToPay.price}). JIT software package compiled for ${nextNodeNum}.`, type: 'success' },
+          { timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16), message: `380-char deterministic header generated and attached: ${nodeHeader380.substring(0, 48)}...`, type: 'info' }
         ]
       };
 
@@ -317,8 +363,8 @@ export default function App() {
 
       // Trigger Toast Notification
       addToast({
-        title: 'PayPal Payment Processed Successfully!',
-        message: `Captured $${itemToPay.price.toFixed(2)} USD via PayPal for ${itemToPay.title}. Assigned to ${nextNodeNum}.`,
+        title: itemToPay.price === 0 ? 'Free Solution Deployed & Provisioned!' : 'PayPal Payment Processed Successfully!',
+        message: itemToPay.price === 0 ? `Free license ($0.00) issued for ${itemToPay.title}. Assigned to ${nextNodeNum}.` : `Captured $${itemToPay.price.toFixed(2)} USD via PayPal for ${itemToPay.title}. Assigned to ${nextNodeNum}.`,
         type: 'success',
         nodeHeader: nodeHeader380,
         nodeNumber: nextNodeNum
@@ -415,6 +461,29 @@ export default function App() {
           />
         )}
 
+        {activeTab === 'marketplace-exchange' && (
+          <MarketplaceView
+            listings={marketplaceListings}
+            bids={marketplaceBids}
+            onPlaceBid={(b) => {
+              setMarketplaceBids(prev => [b, ...prev]);
+              addToast({
+                title: 'Marketplace Bid Submitted',
+                message: `Bid placed on ${b.listingId} for ${(b.totalOffer || b.offeredUnitPrice || 0).toLocaleString()}`,
+                type: 'success'
+              });
+            }}
+            onAddLog={handleAddEngineLog}
+            onDeployTemplate={(template: BusinessTemplate) => {
+              addToast({
+                title: 'Template Activated',
+                message: `${template.templateName} deployed to Solvex Autonomous Cluster`,
+                type: 'success'
+              });
+            }}
+          />
+        )}
+
         {activeTab === 'procurement' && (
           <ProcurementDesk
             onOrderCreated={handleProcurementOrderFinalized}
@@ -435,9 +504,27 @@ export default function App() {
           />
         )}
 
+        {/* Freedom SIM AI OS (SwarmOS Sovereign) */}
+        {activeTab === 'freedom-sim' && (
+          <FreedomSimView />
+        )}
+
         {/* ========================================================================= */}
         {/* ADMIN & SOVEREIGN CONTROL PLANE (.SPACE) TABS                             */}
         {/* ========================================================================= */}
+
+        {activeTab === 'daisy' && (
+          isMasterAdmin ? (
+            <DaisyPipelineHub />
+          ) : (
+            <ProtectedControlView
+              title="DAISY & Agate Core Autonomous Engine"
+              moduleName="EVC Cost Engine, AI Optimizer, Hot-Swap & MMTAI 380-Byte Perimeter"
+              description="Real-time EVC cost accounting, RL mutation graphs, zero-downtime hot-swap circuits, and 5-hop MMTAI security tests on uarefake.space require Sovereign Trustee authorization."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
 
         {activeTab === 'brain' && (
           isMasterAdmin ? (
@@ -447,6 +534,99 @@ export default function App() {
               title="88 Solved Paradoxes & Cognitive Brain Hub"
               moduleName="Cognitive Axiom Engine & Sentinel Suite"
               description="Chamber proofs, mathematical axiom matrices, and Sentinel Pre-Flight verification on uarefake.space require Sovereign Trustee authorization."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
+        {activeTab === 'sovereign-brain' && (
+          isMasterAdmin ? (
+            <AgentBrainView
+              brainState={brainState}
+              onUpdateGoal={(goal) => {
+                setBrainState(prev => ({
+                  ...prev,
+                  activeGoals: prev.activeGoals.map(g => g.id === goal.id ? goal : g)
+                }));
+              }}
+              onAddLog={handleAddEngineLog}
+            />
+          ) : (
+            <ProtectedControlView
+              title="Daisy Haminja Sovereign Brain & Synaptic Mesh"
+              moduleName="Recursive Reasoning Graph & Tether Axiom Synthesizer"
+              description="Autonomous goal resolution, multi-tier dialectic inference, and Tether bubble networks require Sovereign Trustee clearance."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
+        {activeTab === 'paradox-box' && (
+          isMasterAdmin ? (
+            <ParadoxBoxView
+              anomalies={paradoxAnomalies}
+              onResolveParadox={(id) => {
+                setParadoxAnomalies(prev => prev.map(a => a.id === id ? { ...a, status: 'RESOLVED' as any } : a));
+                addToast({
+                  title: 'Paradox Anomaly Resolved',
+                  message: `Paradox ${id} reconciled via dual-track dialetheic proofs.`,
+                  type: 'success'
+                });
+              }}
+              onAddLog={handleAddEngineLog}
+            />
+          ) : (
+            <ProtectedControlView
+              title="Paradox Box 88 Anomaly Engine"
+              moduleName="Dialetheic Rule Checker & 105 Mathematical Solvers"
+              description="Live entropy collapse simulation, crystal glassbox auditing, and 105 mathematical solvers on uarefake.space require Trustee clearance."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
+        {activeTab === 'registry-engine' && (
+          isMasterAdmin ? (
+            <AIRegistryViewer />
+          ) : (
+            <ProtectedControlView
+              title="Dialectic 88 Paradox Registry & Solver Engine"
+              moduleName="54-Node Mesh Topology & Corpus Verification"
+              description="Deterministic paradox registry and verified knowledge corpus require Sovereign Trustee authorization."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
+        {activeTab === 'mmtai-security' && (
+          isMasterAdmin ? (
+            <MmtaiSecurityView
+              peers={mmtaiPeers}
+              audits={mmtaiAudits}
+              onAddLog={handleAddEngineLog}
+            />
+          ) : (
+            <ProtectedControlView
+              title="MMTAI Zero-Trust Security Perimeter"
+              moduleName="380-Byte Cryptographic Shield & Handshake Suite"
+              description="Continuous 5-hop mesh verification and zero-trust perimeter telemetry require Trustee authorization."
+              onOpenAuth={() => setAuthModalOpen(true)}
+            />
+          )
+        )}
+
+        {activeTab === 'jit-build' && (
+          isMasterAdmin ? (
+            <JitBuildView
+              tasks={jitTasks}
+              onAddJitTask={(task) => setJitTasks(prev => [task, ...prev])}
+              onAddLog={handleAddEngineLog}
+            />
+          ) : (
+            <ProtectedControlView
+              title="JIT Post-Agentic Software Synthesizer"
+              moduleName="AST Bytecode Synthesizer & Compiler"
+              description="Real-time runtime bytecode compilation and sovereign node distribution require Trustee authorization."
               onOpenAuth={() => setAuthModalOpen(true)}
             />
           )

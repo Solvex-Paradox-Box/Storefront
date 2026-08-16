@@ -227,8 +227,19 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
               {/* Card Footer with Price and Actions */}
               <div className="pt-4 border-t border-cyan-500/20 flex items-center justify-between">
                 <div>
-                  <div className="text-lg font-bold text-white font-mono">
-                    ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  <div className="text-lg font-bold font-mono">
+                    {item.price === 0 ? (
+                      <div className="flex items-center space-x-1.5">
+                        <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-lg text-xs font-extrabold uppercase">
+                          FREE
+                        </span>
+                        <span className="text-xs text-emerald-400 font-mono font-bold">$0.00</span>
+                      </div>
+                    ) : (
+                      <span className="text-white">
+                        ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    )}
                   </div>
                   <div className="text-[10px] text-cyan-400/70 font-mono font-medium">{item.pricingModel}</div>
                 </div>
@@ -243,9 +254,13 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
                   </button>
                   <button
                     onClick={() => onSelectSolutionForPurchase(item)}
-                    className="bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all shadow-lg shadow-cyan-500/30 active:scale-95"
+                    className={`${
+                      item.price === 0
+                        ? 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-500/30'
+                        : 'bg-cyan-500 hover:bg-cyan-400 text-black shadow-cyan-500/30'
+                    } font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center space-x-1.5 transition-all shadow-lg active:scale-95`}
                   >
-                    <span className="font-mono text-xs">PayPal Deploy</span>
+                    <span className="font-mono text-xs">{item.price === 0 ? 'Free Deploy' : 'PayPal Deploy'}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -381,8 +396,19 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
               {/* Pricing & Checkout Action */}
               <div className="pt-4 border-t border-cyan-500/30 flex items-center justify-between">
                 <div>
-                  <div className="text-2xl font-bold text-white font-mono">
-                    ${activeDetailItem.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  <div className="text-2xl font-bold font-mono">
+                    {activeDetailItem.price === 0 ? (
+                      <div className="flex items-center space-x-2">
+                        <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-3 py-1 rounded-xl text-base font-extrabold uppercase">
+                          FREE
+                        </span>
+                        <span className="text-sm text-emerald-400 font-mono font-bold">($0.00 USD)</span>
+                      </div>
+                    ) : (
+                      <span className="text-white">
+                        ${activeDetailItem.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      </span>
+                    )}
                   </div>
                   <div className="text-xs text-cyan-400 font-mono">{activeDetailItem.pricingModel}</div>
                 </div>
@@ -393,9 +419,13 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
                     setActiveDetailItem(null);
                     onSelectSolutionForPurchase(item);
                   }}
-                  className="bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold px-6 py-3 rounded-2xl text-sm font-mono shadow-xl shadow-cyan-500/30 transition-all flex items-center space-x-2 active:scale-95"
+                  className={`${
+                    activeDetailItem.price === 0
+                      ? 'bg-emerald-400 hover:bg-emerald-300 text-black shadow-emerald-500/30'
+                      : 'bg-cyan-500 hover:bg-cyan-400 text-black shadow-cyan-500/30'
+                  } font-extrabold px-6 py-3 rounded-2xl text-sm font-mono shadow-xl transition-all flex items-center space-x-2 active:scale-95`}
                 >
-                  <span>PayPal Instant Deploy</span>
+                  <span>{activeDetailItem.price === 0 ? 'Claim Free License & Deploy' : 'PayPal Instant Deploy'}</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

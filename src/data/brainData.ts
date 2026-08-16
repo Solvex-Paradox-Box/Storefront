@@ -3,8 +3,10 @@ export interface Paradox {
   name: string;
   description: string;
   chamber: 1 | 2 | 3 | 4 | 5;
-  type: 'proprietary' | 'historical';
-  origin: string;
+  type?: "proprietary" | "historical";
+  origin?: string;
+  status?: string;
+  successRate?: number;
 }
 
 export interface BrainProduct {
@@ -15,124 +17,77 @@ export interface BrainProduct {
 }
 
 export const PARADOXES: Paradox[] = [
-  // ═══════════════════════════════════════════════════════════════════════════
-  // ─── 48 PROPRIETARY SOLVED PARADOXES (Architect / TJ Trustee Core) ────────
-  // ═══════════════════════════════════════════════════════════════════════════
-  
-  // ─── CHAMBER I: FOUNDATIONS (1–12 Proprietary) ───────────────────────────
-  { id: 1,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Isolation vs Consensus (Zamin-Lock)", description: "Decides how localized nodes establish micro-consensus without full network handshakes." },
-  { id: 2,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Entropy vs Homeostasis", description: "Balancing local state thermal decay against background system maintenance protocols." },
-  { id: 3,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Latency vs Autonomy", description: "Allows edge computation clusters to self-determine logic branches during partition isolation." },
-  { id: 4,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Epoch Drift vs Chrono-Consistency", description: "Realigns local timestamps across high-latency mesh nodes without central authority." },
-  { id: 5,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Decentralized Identity vs Zero-Knowledge Anonymity", description: "Guarantees absolute auditability of node actions while keeping physical source identities hidden." },
-  { id: 6,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Local Compute Superiority vs Mesh Resource Pools", description: "Pins security-critical operations locally while offloading mathematical solvers to the idle mesh." },
-  { id: 7,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Shard Parity Overhead vs Network Bandwidth", description: "Minimizes redundancy parity packets to conserve bandwidth while ensuring total reconstruction resilience." },
-  { id: 8,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Mutable State Progression vs Immutable Ledger History", description: "Resolves local state updates with structural ledger history via non-interactive zero-knowledge proofs." },
-  { id: 9,  chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Redundant Routing Pathing vs Traffic Congestion", description: "Dynamically thins active routing tunnels during optimal throughput to prevent signal echoes." },
-  { id: 10, chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Pheromone Decay vs Continuous Signal Amplification", description: "Enforces continuous state awareness without saturating the local spatial mesh with stale routing indicators." },
-  { id: 11, chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Enclave Cryptography vs Processing Overhead", description: "Balances secure hardware boot enclaves against low-latency processing budgets." },
-  { id: 12, chamber: 1, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Sandboxed Compile Sandbox vs Host System Overhead", description: "Secures high-speed bytecode evaluation without exhausting virtual machine resources." },
+  // ─── CHAMBER I: FOUNDATIONS (1–13) ───────────────────────────────────────
+  { id: 1, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Isolation vs Consensus (Zamin-Lock)", description: "Decides how localized nodes establish micro-consensus without full network handshakes." },
+  { id: 2, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Entropy vs Homeostasis", description: "Balancing local state thermal decay against background system maintenance protocols." },
+  { id: 3, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Latency vs Autonomy", description: "Allows edge computation clusters to self-determine logic branches during partition isolation." },
+  { id: 4, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Epoch Drift vs Chrono-Consistency", description: "Realigns local timestamps across high-latency mesh nodes without central authority." },
+  { id: 5, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Decentralized Identity vs Zero-Knowledge Anonymity", description: "Guarantees absolute auditability of node actions while keeping physical source identities hidden." },
+  { id: 6, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Local Compute Superiority vs Mesh Resource Pools", description: "Pins security-critical operations locally while offloading mathematical solvers to the idle mesh." },
+  { id: 7, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Shard Parity Overhead vs Network Bandwidth", description: "Minimizes redundancy parity packets to conserve bandwidth while ensuring total reconstruction resilience." },
+  { id: 8, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Mutable State Progression vs Immutable Ledger History", description: "Resolves local state updates with structural ledger history via non-interactive zero-knowledge proofs." },
+  { id: 9, type: "proprietary", origin: "Solvex Proprietary Core",  chamber: 1, name: "Redundant Routing Pathing vs Traffic Congestion", description: "Dynamically thins active routing tunnels during optimal throughput to prevent signal echoes." },
+  { id: 10, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 1, name: "Pheromone Decay vs Continuous Signal Amplification", description: "Enforces continuous state awareness without saturating the local spatial mesh with stale routing indicators." },
+  { id: 11, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 1, name: "Enclave Cryptography vs Processing Overhead", description: "Balances secure hardware boot enclaves against low-latency processing budgets." },
+  { id: 12, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 1, name: "Sandboxed Compile Sandbox vs Host System Overhead", description: "Secures high-speed bytecode evaluation without exhausting virtual machine resources." },
+  { id: 13, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 1, name: "Trust vs Protection (Integrity Observability)", description: "Monitors peer execution behavior continuously while maintaining non-invasive operational boundaries." },
 
-  // ─── CHAMBER II: MOTION & TIME (13–24 Proprietary) ────────────────────────
-  { id: 13, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Trust vs Protection (Integrity Observability)", description: "Monitors peer execution behavior continuously while maintaining non-invasive operational boundaries." },
-  { id: 14, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Memory-Entropy Coherence", description: "Ensures that local memory caches remain structurally ordered despite background radioactive interference." },
-  { id: 15, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Deterministic Execution Pathing vs Random Seed Synthesis", description: "Secures cryptographic nonces by synthesizing dynamic system entropy with rigid execution sequences." },
-  { id: 16, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Bubble Boundary Expansion vs Core Node Security", description: "Extends tether fields to ingest external endpoints while preserving core kernel isolation parameters." },
-  { id: 17, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Asynchronous Message Passing vs Synchronous Block Lockout", description: "Prevents deadlocks in distributed thread pools while handling real-time inter-process messaging." },
-  { id: 18, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Consensus Threshold Agreement vs Split-Brain Partitioning", description: "Ensures network consensus can recover autonomously after severe geographical split-brain partitions." },
-  { id: 19, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Microkernel Isolation vs Inter-Process Communication Speed", description: "Achieves memory-safe microkernel domain separation with zero-copy shared memory messaging." },
-  { id: 20, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Dynamic Load Balancing vs Compute Pinning", description: "Redistributes intense compilation tasks without swapping context registers off dedicated cores." },
-  { id: 21, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Peer Trust Coefficient vs Anonymous Mesh Entry", description: "Enforces rapid initial challenge-response cycles for anonymous entries without degrading core mesh speed." },
-  { id: 22, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Failure State Virtualization vs Active Recovery Overhead", description: "Maintains uninterrupted operations by running failure prediction models alongside main execution thread." },
-  { id: 23, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Decentralized Hash Table Lookup Latency vs Routing Integrity", description: "Caches critical hash lookups securely while verifying structural routing signatures." },
-  { id: 24, chamber: 2, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Ephemeral Thread Spawning vs Thread Pool Exhaustion", description: "Handles unpredictable bursts of transaction triggers using ultra-lightweight virtual coroutine threads." },
+  // ─── CHAMBER II: MOTION & TIME (14–23) ──────────────────────────────────
+  { id: 14, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Memory-Entropy Coherence", description: "Ensures that local memory caches remain structurally ordered despite background radioactive interference." },
+  { id: 15, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Deterministic Execution Pathing vs Random Seed Synthesis", description: "Secures cryptographic nonces by synthesizing dynamic system entropy with rigid execution sequences." },
+  { id: 16, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Bubble Boundary Expansion vs Core Node Security", description: "Extends tether fields to ingest external endpoints while preserving core kernel isolation parameters." },
+  { id: 17, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Asynchronous Message Passing vs Synchronous Block Lockout", description: "Prevents deadlocks in distributed thread pools while handling real-time inter-process messaging." },
+  { id: 18, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Consensus Threshold Agreement vs Split-Brain Partitioning", description: "Ensures network consensus can recover autonomously after severe geographical split-brain partitions." },
+  { id: 19, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Microkernel Isolation vs Inter-Process Communication Speed", description: "Achieves memory-safe microkernel domain separation with zero-copy shared memory messaging." },
+  { id: 20, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Dynamic Load Balancing vs Compute Pinning", description: "Redistributes intense compilation tasks without swapping context registers off dedicated cores." },
+  { id: 21, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Peer Trust Coefficient vs Anonymous Mesh Entry", description: "Enforces rapid initial challenge-response cycles for anonymous entries without degrading core mesh speed." },
+  { id: 22, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Failure State Virtualization vs Active Recovery Overhead", description: "Maintains uninterrupted operations by running failure prediction models alongside main execution thread." },
+  { id: 23, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 2, name: "Decentralized Hash Table Lookup Latency vs Routing Integrity", description: "Caches critical hash lookups securely while verifying structural routing signatures." },
 
-  // ─── CHAMBER III: CHOICE & SELF (25–36 Proprietary) ───────────────────────
-  { id: 25, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Cryptographic Nonce Uniqueness vs Sequence Generation Speed", description: "Generates secure nonces at gigahertz frequencies without risking sequence collisions." },
-  { id: 26, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Pheromone Attractor Alignment vs Signal Repulsion", description: "Uses secondary repelling signals to guide mesh queries away from slow, congested, or misbehaving nodes." },
-  { id: 27, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Local Node Isolation vs Mesh Parity Rebuilding", description: "Rebuilds local storage state using distributed shard parity without reconnecting to the global network." },
-  { id: 28, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Garbage Collection Jitter vs Real-Time System Determinism", description: "Eliminates GC pauses entirely by using localized, deterministic block memory allocation pools." },
-  { id: 29, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Memory Buffer Allocation vs Buffer Overflow Protection", description: "Applies compile-time size contracts to prevent memory bounds violations." },
-  { id: 30, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Clock Synchronization vs Lamport Log Sequence", description: "Integrates physical clock offsets with logical Lamport timestamps to maintain transactional causality." },
-  { id: 31, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Recursive Execution Stack vs Stack Overflow Prevention", description: "Enforces deep recursive mathematical evaluations by converting them to heap-allocated continuations." },
-  { id: 32, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Edge Device Compute Constancy vs Power State Fluctuations", description: "Adapts calculation precision in real-time according to thermal and voltage changes." },
-  { id: 33, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Secure Boot Attestation vs Dynamic Patch Upgrades", description: "Performs real-time, non-blocking integrity verification of hot-swapped microkernel patches." },
-  { id: 34, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Zero-Copy Transport vs Memory Bandwidth Saturation", description: "Routes data through kernel bypass paths to eliminate copy overhead without saturating memory bus throughput." },
-  { id: 35, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Sovereign Tether Expansion vs Core Node Isolation", description: "Grows the active tether field to absorb external endpoints while keeping the kernel partition boundary sealed." },
-  { id: 36, chamber: 3, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Gossip Protocol Proliferation vs Message Saturation", description: "Throttles gossip fan-out dynamically to prevent cascade saturation across high-density peer meshes." },
+  // ─── CHAMBER III: CHOICE & SELF (24–38) ─────────────────────────────────
+  { id: 24, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Ephemeral Thread Spawning vs Thread Pool Exhaustion", description: "Handles unpredictable bursts of transaction triggers using ultra-lightweight virtual coroutine threads." },
+  { id: 25, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Cryptographic Nonce Uniqueness vs Sequence Generation Speed", description: "Generates secure nonces at gigahertz frequencies without risking sequence collisions." },
+  { id: 26, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Pheromone Attractor Alignment vs Signal Repulsion", description: "Uses secondary repelling signals to guide mesh queries away from slow, congested, or misbehaving nodes." },
+  { id: 27, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Local Node Isolation vs Mesh Parity Rebuilding", description: "Rebuilds local storage state using distributed shard parity without reconnecting to the global network." },
+  { id: 28, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Garbage Collection Jitter vs Real-Time System Determinism", description: "Eliminates GC pauses entirely by using localized, deterministic block memory allocation pools." },
+  { id: 29, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Memory Buffer Allocation vs Buffer Overflow Protection", description: "Applies compile-time size contracts to prevent memory bounds violations." },
+  { id: 30, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Clock Synchronization vs Lamport Log Sequence", description: "Integrates physical clock offsets with logical Lamport timestamps to maintain transactional causality." },
+  { id: 31, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Recursive Execution Stack vs Stack Overflow Prevention", description: "Enforces deep recursive mathematical evaluations by converting them to heap-allocated continuations." },
+  { id: 32, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Edge Device Compute Constancy vs Power State Fluctuations", description: "Adapts calculation precision in real-time according to thermal and voltage changes." },
+  { id: 33, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Secure Boot Attestation vs Dynamic Patch Upgrades", description: "Performs real-time, non-blocking integrity verification of hot-swapped microkernel patches." },
+  { id: 34, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Zero-Copy Transport vs Memory Bandwidth Saturation", description: "Routes data through kernel bypass paths to eliminate copy overhead without saturating memory bus throughput." },
+  { id: 35, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Sovereign Tether Expansion vs Core Node Isolation", description: "Grows the active tether field to absorb external endpoints while keeping the kernel partition boundary sealed." },
+  { id: 36, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Gossip Protocol Proliferation vs Message Saturation", description: "Throttles gossip fan-out dynamically to prevent cascade saturation across high-density peer meshes." },
+  { id: 37, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Lamport Timestamp Drift vs Causal Ordering", description: "Corrects Lamport sequence divergence during network partitions without breaking happens-before guarantees." },
+  { id: 38, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 3, name: "Kernel Preemption vs Interrupt Latency", description: "Ensures real-time tasks preempt safely while keeping hardware interrupt service routines below 1μs." },
 
-  // ─── CHAMBER IV: STRUCTURE (37–44 Proprietary) ────────────────────────────
-  { id: 37, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Lamport Timestamp Drift vs Causal Ordering", description: "Corrects Lamport sequence divergence during network partitions without breaking happens-before guarantees." },
-  { id: 38, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Kernel Preemption vs Interrupt Latency", description: "Ensures real-time tasks preempt safely while keeping hardware interrupt service routines below 1μs." },
-  { id: 39, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Merkle Path Depth vs Verification Speed", description: "Optimizes Merkle tree branching factors to minimize proof size while maintaining sub-millisecond verification." },
-  { id: 40, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Homomorphic Depth vs Noise Budget Exhaustion", description: "Manages FHE circuit depth to maximize computation layers before ciphertext noise renders results undecodable." },
-  { id: 41, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Zamin-Lock Broadcast vs Selective Disclosure", description: "Controls which locked consensus outputs are broadcast publicly versus withheld for permissioned clients." },
-  { id: 42, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Quorum Size vs Fault Tolerance Threshold", description: "Calibrates voting quorum size to maximize Byzantine fault resilience without degrading commit latency." },
-  { id: 43, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Tether Bubble Density vs Signal Propagation", description: "Limits coordinate bubble density to prevent pheromone signal interference across overlapping tether zones." },
-  { id: 44, chamber: 4, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Compile-Time Verification vs Runtime Adaptability", description: "Locks critical execution contracts at compile time while preserving hot-swap capability for dynamic modules." },
+  // ─── CHAMBER IV: STRUCTURE (39–48) ──────────────────────────────────────
+  { id: 39, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Merkle Path Depth vs Verification Speed", description: "Optimizes Merkle tree branching factors to minimize proof size while maintaining sub-millisecond verification." },
+  { id: 40, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Homomorphic Depth vs Noise Budget Exhaustion", description: "Manages FHE circuit depth to maximize computation layers before ciphertext noise renders results undecodable." },
+  { id: 41, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Zamin-Lock Broadcast vs Selective Disclosure", description: "Controls which locked consensus outputs are broadcast publicly versus withheld for permissioned clients." },
+  { id: 42, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Quorum Size vs Fault Tolerance Threshold", description: "Calibrates voting quorum size to maximize Byzantine fault resilience without degrading commit latency." },
+  { id: 43, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Tether Bubble Density vs Signal Propagation", description: "Limits coordinate bubble density to prevent pheromone signal interference across overlapping tether zones." },
+  { id: 44, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Compile-Time Verification vs Runtime Adaptability", description: "Locks critical execution contracts at compile time while preserving hot-swap capability for dynamic modules." },
+  { id: 45, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Sovereign State Sprawl vs Consensus Compaction", description: "Compresses distributed state sprawl into atomic Chrono-Compaction nodes via non-interactive ZK verification." },
+  { id: 46, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Cross-Shard Atomicity vs Throughput Sharding", description: "Executes atomic cross-shard transactions without serializing the entire shard matrix throughput pipeline." },
+  { id: 47, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Temporal Entropy vs Deterministic Replay", description: "Captures sufficient entropy for security seeds while maintaining full deterministic replay for audit trails." },
+  { id: 48, type: "proprietary", origin: "Solvex Proprietary Core", chamber: 4, name: "Byzantine Equivocation vs Finality Guarantee", description: "Detects and slashes equivocating validators while preserving one-slot finality for honest consensus participants." },
 
-  // ─── CHAMBER V: TRANSCENDENCE (45–48 Proprietary) ─────────────────────────
-  { id: 45, chamber: 5, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Sovereign State Sprawl vs Consensus Compaction", description: "Compresses distributed state sprawl into atomic Chrono-Compaction nodes via non-interactive ZK verification." },
-  { id: 46, chamber: 5, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Cross-Shard Atomicity vs Throughput Sharding", description: "Executes atomic cross-shard transactions without serializing the entire shard matrix throughput pipeline." },
-  { id: 47, chamber: 5, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Temporal Entropy vs Deterministic Replay", description: "Captures sufficient entropy for security seeds while maintaining full deterministic replay for audit trails." },
-  { id: 48, chamber: 5, type: 'proprietary', origin: 'Proprietary TJ / Architect Core', name: "Byzantine Equivocation vs Finality Guarantee", description: "Detects and slashes equivocating validators while preserving one-slot finality for honest consensus participants." },
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // ─── 40 HISTORICALLY SOLVED PARADOXES (Synthesized Foundation Core) ───────
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  // ─── CHAMBER I: FOUNDATIONS (49–56 Historical) ───────────────────────────
-  { id: 49, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Braess' Paradox (Routing vs Congestion)", description: "Adding network routing capacity can paradoxically reduce throughput; solved via Nash equilibrium routing matrices." },
-  { id: 50, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Byzantine Generals Paradox (Consensus under Duress)", description: "Reaching coordinated consensus over unauthenticated networks; solved via cryptographic proof-of-authority and 2/3 quorums." },
-  { id: 51, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Prisoner's Dilemma (Nash Equilibrium Alignment)", description: "Individual self-interest conflicts with collective optimum; solved through repeated game-theoretic tit-for-tat bonding." },
-  { id: 52, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Arrow's Impossibility (Ranked Preference Aggregation)", description: "No ranked voting system reflects all preferences fairly; solved through cardinal utility weightings and stake consensus." },
-  { id: 53, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Russell's Barber Paradox (Self-Referential Sets)", description: "A set of all sets that do not contain themselves; solved via Zermelo-Fraenkel typed hierarchy axioms." },
-  { id: 54, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Curry's Paradox (Self-Referential Implication)", description: "Self-referential conditionals proving false statements; solved via linear logic restricting structural contraction." },
-  { id: 55, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Sorites Paradox (Continuum vs Discrete Boundaries)", description: "When does a grain of sand become a heap; solved through multi-valued fuzzy logic truth thresholds." },
-  { id: 56, chamber: 1, type: 'historical', origin: 'Historically Solved Foundation', name: "Ship of Theseus (Causal Continuity of Identity)", description: "Identity persistence when all components are replaced; solved via cryptographic invariant hash lineages." },
-
-  // ─── CHAMBER II: MOTION & TIME (57–64 Historical) ────────────────────────
-  { id: 57, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Zeno's Dichotomy Paradox (Motion & Infinite Halves)", description: "Motion impossible if continuous space requires infinite steps; solved via convergent geometric series summation." },
-  { id: 58, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Zeno's Achilles & The Tortoise Paradox", description: "The swifter runner never overtakes the slower; solved via calculus and continuous spacetime integration." },
-  { id: 59, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Zeno's Arrow Paradox (Instantaneous State vs Velocity)", description: "An arrow in flight is motionless at any single instant; solved via differential calculus derivatives of state vectors." },
-  { id: 60, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Loschmidt's Time-Reversal Paradox", description: "Microscopic laws are time-symmetric while macroscopic entropy increases; solved via statistical Boltzmann entropy." },
-  { id: 61, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Grandfather Causal Loop Paradox", description: "Retroactive causality altering preconditions; solved via Novikov self-consistency and branching worldline timelines." },
-  { id: 62, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Twin Relativistic Time Dilation Paradox", description: "Symmetric motion with asymmetric aging; solved via special relativity non-inertial acceleration geodesics." },
-  { id: 63, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Olbers' Darkness Paradox (Infinite Universe Radiation)", description: "If universe is infinite, night sky should be blindingly bright; solved via finite speed of light and cosmic redshift expansion." },
-  { id: 64, chamber: 2, type: 'historical', origin: 'Historically Solved Foundation', name: "Gibbs Mixing Entropy Paradox", description: "Discontinuous entropy jump when mixing identical versus distinguishable gases; solved via quantum indistinguishability." },
-
-  // ─── CHAMBER III: CHOICE & SELF (65–72 Historical) ───────────────────────
-  { id: 65, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "Newcomb's Predictor Paradox", description: "Free will choice against an omniscient predictor; solved via causal decision theory versus evidential dominance." },
-  { id: 66, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "Two Envelopes Paradox (Expected Value Symmetry)", description: "Apparent unbounded switching gain in symmetric probability spaces; solved through improper prior probability limits." },
-  { id: 67, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "Monty Hall Bayesian Reveal Paradox", description: "Counter-intuitive conditional probability shift upon partial reveal; solved via explicit Bayesian likelihood updating." },
-  { id: 68, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "St. Petersburg Paradox (Infinite Stochastics)", description: "Infinite mathematical expectation with finite rational willingness to pay; solved via logarithmic utility functions." },
-  { id: 69, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "Allais Paradox (Certainty Effect & Utility)", description: "Violations of expected utility theory in risk evaluation; solved via prospect theory and non-linear decision weights." },
-  { id: 70, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "Ellsberg Paradox (Ambiguity Aversion)", description: "Preference for known risks over unknown probability bounds; solved via Choquet expected utility with capacities." },
-  { id: 71, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "Condorcet Preference Voting Paradox", description: "Collective non-transitive majorities A>B>C>A; solved through Schulze and Kemeny-Young consensus ranking." },
-  { id: 72, chamber: 3, type: 'historical', origin: 'Historically Solved Foundation', name: "Simpson's Statistical Reversal Paradox", description: "Aggregated trend contradicts each individual subgroup; solved through causal DAGs and confounding variable control." },
-
-  // ─── CHAMBER IV: STRUCTURE (73–80 Historical) ────────────────────────────
-  { id: 73, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Banach-Tarski Measure Paradox", description: "Decomposing a sphere into pieces to construct two identical spheres; solved via non-measurable Vitali sets." },
-  { id: 74, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Coastline Fractal Paradox (Scale Invariance)", description: "Perimeter approaches infinity as measurement scale shrinks; solved through Mandelbrot fractional Hausdorff dimensions." },
-  { id: 75, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Birthday Hash Collision Paradox", description: "High collision frequency in small sample spaces; solved via square-root birthday bound cryptographic scaling." },
-  { id: 76, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Jevons Resource Efficiency Paradox", description: "Higher technological efficiency multiplies aggregate resource consumption; solved via dynamic feedback taxation." },
-  { id: 77, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Moravec's AI Sensorimotor Paradox", description: "Abstract reasoning is computationally cheap while physical perception is expensive; solved via multimodal sensory embeddings." },
-  { id: 78, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Polanyi's Tacit Knowledge Paradox", description: "We know more than we can tell; solved through deep neural representation learning and latent space extraction." },
-  { id: 79, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Grelling-Nelson Semantic Paradox", description: "Is 'heterological' a heterological word; solved by segregating object language from metalinguistic predicates." },
-  { id: 80, chamber: 4, type: 'historical', origin: 'Historically Solved Foundation', name: "Berry Definability Paradox", description: "The smallest positive integer not definable in under twenty syllables; solved by formalizing Turing complexity bounds." },
-
-  // ─── CHAMBER V: TRANSCENDENCE (81–88 Historical & Terminal Convergence) ─
-  { id: 81, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Maxwell's Demon Thermodynamic Paradox", description: "Information-driven entropy reduction; solved via Landauer's Principle: erasing 1 bit generates kT ln 2 heat." },
-  { id: 82, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Schrödinger's Quantum State Superposition", description: "Macroscopic state indeterminate until measured; solved via decoherence theory and quantum pointer states." },
-  { id: 83, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "EPR Paradox & Quantum Non-Locality", description: "Spooky action at a distance vs local realism; solved via Bell's Theorem and non-signaling entangled channels." },
-  { id: 84, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Wigner's Friend Multi-Observer Paradox", description: "Conflicting facts between nested observers; solved via relational quantum mechanics and shared decoherence." },
-  { id: 85, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Quantum Zeno Dynamic Suspension Paradox", description: "Continuous measurement stops quantum state transitions; solved via non-demolition measurement intervals." },
-  { id: 86, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Fermi Extraterrestrial Silence Paradox", description: "Vast cosmic probability vs zero signals; solved via the Great Filter, percolation theory, and sub-light energy limits." },
-  { id: 87, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Unexpected Execution Surprise Paradox", description: "Backward induction predicting date of surprise; solved via formal epistemic logic distinguishing proof from belief." },
-  { id: 88, chamber: 5, type: 'historical', origin: 'Historically Solved Foundation', name: "Omnipresence vs Boundary Invariance Paradox", description: "Terminal Sovereign Resolution: Solved by Todd Jeffrey Ites Jr. by synthesizing continuous state invariance across 48 real proprietary and 40 classical paradoxes into a deterministic 1536-dimensional non-stochastic protocol." }
+  // ─── CHAMBER V: TRANSCENDENCE (49–59) ────────────────────────────────────
+  { id: 49, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Neural Inference Latency vs Privacy Budget", description: "Bounds differential privacy budget expenditure per inference while maintaining sub-50ms model response SLAs." },
+  { id: 50, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Pheromone Signal Decay vs Memory Persistence", description: "Calibrates pheromone half-life to allow stale route eviction while preserving critical long-term coordinate memory." },
+  { id: 51, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Sovereign Epoch Boundary vs Continuous Execution", description: "Enforces clean epoch transitions for ledger checkpointing without interrupting live transaction processing pipelines." },
+  { id: 52, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Proof-of-Sovereignty vs Decentralized Verification", description: "Proves sovereign execution authority to external verifiers without exposing internal kernel state or identity." },
+  { id: 53, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "IRS-First Rule vs Operating Capital Release", description: "Sequences 21% corporate tax sequestration to EFTPS before any revenue is classified as operating capital." },
+  { id: 54, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Outbound Fiduciary Autonomy vs Operator Sign-Off", description: "Balances autonomous B2B contract execution with mandatory operator authorization at high-value thresholds." },
+  { id: 55, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "ROI Pricing Dynamics vs Fixed Contract Anchoring", description: "Computes dynamic pricing as 22% of estimated ROI savings while maintaining floor/ceiling SLA constraints." },
+  { id: 56, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "NIST Gate Compliance vs Execution Throughput", description: "Enforces NIST SP 800-53 control verification continuously without degrading transaction pipeline frequency." },
+  { id: 57, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Autonomous Sales Cadence vs Human Relationship Depth", description: "Calibrates autonomous outbound engagement velocity against relationship-depth requirements of enterprise B2B deals." },
+  { id: 58, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Fiscal Audit Immutability vs State Mutability", description: "Writes Lamport-ordered audit milestones to an append-only ledger while allowing local state to evolve freely." },
+  { id: 59, type: "historical", origin: "Historical Logical Dialectic", chamber: 5, name: "Axiom Resolution vs Paradox Synthesis", description: "The terminal paradox: resolves all prior 58 paradoxes into a single unified sovereign execution axiom — the dAIsy haMINJA U.A.R.E.F.A.K.E. convergence proof." },
 ];
 
-// ── 105 SOVEREIGN SOLUTION LAYERS (UNLOCKED BY THE 88 SOLVED PARADOXES) ───────
+// ── SOVEREIGN SOLUTION LAYERS ────────────────────────────────────────────────
 export interface SovereignSolution {
   id: string;
   name: string;
@@ -253,31 +208,6 @@ export const SOVEREIGN_SOLUTIONS: SovereignSolution[] = [
   { id: "S-103", layer: 7, layerName: "Cognitive Memory, Pheromones & Autonomic Healing", name: "Autonomic Heat Dissipation Governor", description: "Adjusts clock speed and background task rates to maintain safe operating temperatures." },
   { id: "S-104", layer: 7, layerName: "Cognitive Memory, Pheromones & Autonomic Healing", name: "Self-Adjusting Buffer Margin Guard", description: "Expands network buffers during burst traffic events and thins them during quiet periods to conserve RAM." },
   { id: "S-105", layer: 7, layerName: "Cognitive Memory, Pheromones & Autonomic Healing", name: "Sovereign System Homeostasis Monitor", description: "Continuously evaluates overall system health metrics to trigger self-healing protocols as needed." },
-
-  // ─── 23 SOVEREIGN .SPACE INFRASTRUCTURE SOLUTIONS (S-106 TO S-128) ─────────────
-  { id: "S-106", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Sovereign Domain Dispatch Controller (uarefake.space)", description: "Manages cryptographic routing, access tokens, and enclave isolation for internal administrative control." },
-  { id: "S-107", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Non-Custodial Black Box Vault Enclave", description: "Secures local-only encrypted vault memory with military-grade ephemeral key zeroization." },
-  { id: "S-108", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "380-Character Cryptographic Node Header Injector", description: "Embeds deterministic multi-node header manifests into every JIT bytecode transmission." },
-  { id: "S-109", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "AppForge Zero-Trust Compilation Pipeline", description: "Compiles secure full-stack applications with eBPF instruction validation and automated sandbox isolation." },
-  { id: "S-110", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Sovereign Master Access Enclave Passkey Gateway", description: "Enforces zero-trust cryptographic passkey and master password authentication." },
-  { id: "S-111", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Node Mesh Telemetry & Jitter Analyzer", description: "Real-time monitoring of sub-millisecond node latency, hardware drift, and memory coherence." },
-  { id: "S-112", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Autonomic Hot-Swap Code Patching Engine", description: "Injects verified runtime patches directly into executing thread pools with zero context loss." },
-  { id: "S-113", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Sovereign eBPF Sandbox Bytecode Verifier", description: "Hardware-isolated bytecode execution unit preventing illegal kernel memory mutations." },
-  { id: "S-114", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Zero-Knowledge Audit Trail Sealed Journal", description: "Appends immutable tamper-proof hashes to the sovereign consensus ledger." },
-  { id: "S-115", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "NIST SP 800-53 Sovereign Boundary Attestator", description: "Continuous hardware-level attestation verifying node perimeter isolation." },
-  { id: "S-116", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "IRS-First Tax & Trade Compliance Enclave", description: "Automated real-time tariff, tax withholding, and regulatory ledger compliance validator." },
-  { id: "S-117", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Sovereign P2P Consensus Quorum Balancer", description: "Self-adjusting Byzantine fault-tolerant voting matrix for isolated mesh nodes." },
-  { id: "S-118", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Ephemeral 256-Bit Key Zeroization Daemon", description: "Automatically purges cryptographic keys from volatile registers upon transaction finalization." },
-  { id: "S-119", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Multi-Region Split-Brain Ledger Reconciler", description: "Autonomous merge resolution prioritizing verifiable cryptographic work proofs." },
-  { id: "S-120", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "DMA Ring-Buffer Sensor Offload Pipeline", description: "Zero-CPU hardware-to-memory data streaming for mission-critical telemetry." },
-  { id: "S-121", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Sovereign Lamport Vector Causality Engine", description: "Enforces temporal sequence ordering across non-synchronized edge hardware." },
-  { id: "S-122", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Radioactive Thermal Entropy Seed Generator", description: "Synthesizes non-deterministic seed nonces from hardware thermal noise." },
-  { id: "S-123", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Self-Healing Route Discovery Mesh Loop", description: "Autonomous discovery and packet rerouting for damaged network topology paths." },
-  { id: "S-124", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Sovereign Memory-Entropy Coherence Shield", description: "Scans and repairs background bit-rot and radioactive decay in physical RAM blocks." },
-  { id: "S-125", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "Automated RFQ Smart Contract Bidding Agent", description: "Autonomous multi-vendor quotation parsing with dynamic risk weighting." },
-  { id: "S-126", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "PayPal B2B Instant Escrow Capture Bridge", description: "Direct REST API integration for autonomous milestone-based capital capture." },
-  { id: "S-127", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "JIT Software Artifact Micro-Distributor", description: "Instant streaming packaging for compiled sovereign enterprise modules." },
-  { id: "S-128", layer: 8, layerName: "Sovereign Infrastructure & .space Enclave Control", name: "dAIsy haMINJA Sentinel Master Brain Homeostasis Orchestrator", description: "Global cognitive governance engine coordinating all 128 solutions, 88 paradoxes, and 105 autonomous businesses." },
 ];
 
 export const SOLUTION_LAYERS = [
@@ -288,7 +218,6 @@ export const SOLUTION_LAYERS = [
   { num: 5, name: "Consensus Mechanics & Distributed State", solutions: 15, color: "#F87171", symbol: "⬟", desc: "Fractal consensus, CRDT, BFT validation, quorum adjustment and gossip synchronization" },
   { num: 6, name: "Regulatory Compliance & SOC 2 Auditing", solutions: 15, color: "#D4AF37", symbol: "⚖", desc: "NIST SP 800-53, SOC 2, ISO 27001 — continuous audit trails, boot attestation and drift rectification" },
   { num: 7, name: "Cognitive Memory, Pheromones & Autonomic Healing", solutions: 15, color: "#E879F9", symbol: "𓁙", desc: "Pheromone attractors, memory coherence, autonomic healing loops and sovereign homeostasis" },
-  { num: 8, name: "Sovereign Infrastructure & .space Enclave Control", solutions: 23, color: "#38BDF8", symbol: "⚡", desc: "uarefake.space Master Control Board, Black Box Vault, 380-char header injection, AppForge compiler and zero-trust passkeys" },
 ];
 
 export const BRAIN_PRODUCTS: BrainProduct[] = [
@@ -308,17 +237,17 @@ export const BRAIN_PRODUCTS: BrainProduct[] = [
 ];
 
 export const CHAMBER_META = [
-  { num: "I",   name: "FOUNDATIONS",   total: 20, proprietary: 12, historical: 8,  symbol: "ᚱ", desc: "Foundational axiomatic proofs, Zamin-Lock, and game-theoretic consensus core", color: "#D4AF37" },
-  { num: "II",  name: "MOTION & TIME", total: 20, proprietary: 12, historical: 8,  symbol: "☸", desc: "Chrono-consistency, deterministic execution, and relativistic temporal alignment", color: "#60A5FA" },
-  { num: "III", name: "CHOICE & SELF", total: 20, proprietary: 12, historical: 8,  symbol: "𓁙", desc: "Agentic sovereignty, non-interactive ZK proofs, and decision-theoretic models", color: "#A78BFA" },
-  { num: "IV",  name: "STRUCTURE",     total: 16, proprietary: 8,  historical: 8,  symbol: "⬢", desc: "Bare-metal hardware stability, fractal sharding, and topological scaling", color: "#34D399" },
-  { num: "V",   name: "TRANSCENDENCE", total: 12, proprietary: 4,  historical: 8,  symbol: "👁", desc: "Terminal reconciliation — IRS-First Rule, Landauer thermodynamics, and U.A.R.E.F.A.K.E. convergence", color: "#F59E0B" },
+  { num: "I",   name: "FOUNDATIONS",   paradoxes: 13, total: 13, proprietary: 13, historical: 0,  symbol: "ᚱ", desc: "Proprietary architect-derived solutions — the active processing core", color: "#D4AF37" },
+  { num: "II",  name: "MOTION & TIME", paradoxes: 10, total: 10, proprietary: 10, historical: 0,  symbol: "☸", desc: "Resolves causal drift in untrusted network environments", color: "#60A5FA" },
+  { num: "III", name: "CHOICE & SELF", paradoxes: 15, total: 15, proprietary: 15, historical: 0,  symbol: "𓁙", desc: "Manages autonomous decision-making and agentic sovereignty", color: "#A78BFA" },
+  { num: "IV",  name: "STRUCTURE",     paradoxes: 10, total: 10, proprietary: 10, historical: 0,  symbol: "⬢", desc: "Ensures hardware-level stability for bare-metal execution", color: "#34D399" },
+  { num: "V",   name: "TRANSCENDENCE", paradoxes: 40, total: 40, proprietary: 0,  historical: 40, symbol: "👁", desc: "Final reconciliation — IRS-First Rule, U.A.R.E.F.A.K.E. convergence, absolute sovereign output", color: "#F59E0B" },
 ];
 
 export function getChamberForParadox(id: number): typeof CHAMBER_META[number] {
-  if (id <= 12 || (id >= 49 && id <= 56)) return CHAMBER_META[0]; // Chamber I (12 Prop + 8 Hist = 20)
-  if ((id >= 13 && id <= 24) || (id >= 57 && id <= 64)) return CHAMBER_META[1]; // Chamber II (12 Prop + 8 Hist = 20)
-  if ((id >= 25 && id <= 36) || (id >= 65 && id <= 72)) return CHAMBER_META[2]; // Chamber III (12 Prop + 8 Hist = 20)
-  if ((id >= 37 && id <= 44) || (id >= 73 && id <= 80)) return CHAMBER_META[3]; // Chamber IV (8 Prop + 8 Hist = 16)
-  return CHAMBER_META[4]; // Chamber V (4 Prop + 8 Hist = 12)
+  if (id <= 13) return CHAMBER_META[0];
+  if (id <= 23) return CHAMBER_META[1];
+  if (id <= 38) return CHAMBER_META[2];
+  if (id <= 48) return CHAMBER_META[3];
+  return CHAMBER_META[4];
 }

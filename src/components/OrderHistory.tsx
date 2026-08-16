@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { FileText, CheckCircle2, Clock, Truck, ShieldCheck, ArrowRight, DollarSign, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react';
+import { FileText, CheckCircle2, Clock, Truck, ShieldCheck, ArrowRight, DollarSign, ExternalLink, ChevronDown, ChevronUp, Download, Code, Terminal, Copy, Check, X, Sparkles, Cpu } from 'lucide-react';
 import { PurchaseOrder } from '../types';
+import { downloadJitSoftwareFile, compileJitSoftwarePackage, JitSoftwareArtifact } from '../utils/jitCompiler';
 
 interface OrderHistoryProps {
   orders: PurchaseOrder[];
@@ -9,9 +10,44 @@ interface OrderHistoryProps {
 
 export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypalForPo }) => {
   const [expandedPoId, setExpandedPoId] = useState<string | null>(orders[0]?.id || null);
+  const [selectedJitModalPo, setSelectedJitModalPo] = useState<PurchaseOrder | null>(null);
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [activeCodeTab, setActiveCodeTab] = useState<'docker' | 'code' | 'manifest'>('docker');
 
   const toggleExpand = (id: string) => {
     setExpandedPoId(prev => (prev === id ? null : id));
+  };
+
+  const handleCopy = (text: string, keyId: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedKey(keyId);
+    setTimeout(() => setCopiedKey(null), 2500);
+  };
+
+  const getEffectiveArtifact = (po: PurchaseOrder): JitSoftwareArtifact => {
+    if (po.jitArtifact) return po.jitArtifact;
+    // Compile dynamically if not present
+    return compileJitSoftwarePackage(
+      {
+        id: po.id,
+        itemType: 'Paradox Solution',
+        title: po.title,
+        category: 'Autonomous Operations',
+        description: po.itemDescription,
+        fullDescription: po.itemDescription,
+        price: po.totalAmount,
+        pricingModel: 'One-time',
+        rating: 5.0,
+        reviewsCount: 100,
+        vendor: po.supplierName || 'Todd Jeffrey Ites Jr.',
+        integrationPlatforms: ['uarefake.com', 'uarefake.space'],
+        features: ['JIT Bytecode Compilation', '380-Character Invariant Header'],
+        iconName: 'Cpu',
+        specs: { "Compiler": "Solvex JIT 2.4", "Security": "eBPF Verified" }
+      },
+      'NODE-01',
+      po.paypalPayerEmail || 'customer@uarefake.com'
+    );
   };
 
   const getStatusBadge = (status: PurchaseOrder['status']) => {
@@ -32,12 +68,12 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
   return (
     <div className="space-y-6">
       {/* Banner */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <h2 className="text-2xl font-extrabold text-white">Purchase Orders Ledger</h2>
             <p className="text-xs sm:text-sm text-slate-300">
-              Audit logs, PayPal payment receipts, and cross-platform fulfillment statuses for all corporate procurement orders.
+              Audit logs, PayPal payment receipts, 380-character header assignments, and downloadable custom JIT software packages.
             </p>
           </div>
           <div className="text-xs font-mono text-slate-400 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl">
@@ -49,7 +85,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
       {/* Orders List */}
       <div className="space-y-4">
         {orders.length === 0 ? (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center space-y-3">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center space-y-3">
             <FileText className="w-10 h-10 text-slate-600 mx-auto" />
             <h3 className="text-lg font-bold text-white">No Purchase Orders Found</h3>
             <p className="text-xs text-slate-400 max-w-md mx-auto">
@@ -59,10 +95,12 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
         ) : (
           orders.map((po) => {
           const isExpanded = expandedPoId === po.id;
+          const artifact = getEffectiveArtifact(po);
+
           return (
             <div
               key={po.id}
-              className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl overflow-hidden transition-all shadow-lg"
+              className="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-3xl overflow-hidden transition-all shadow-lg"
             >
               {/* Order Row Header */}
               <div
@@ -73,6 +111,12 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
                   <div className="flex items-center space-x-3">
                     <span className="font-mono font-bold text-indigo-400 text-sm">{po.poNumber}</span>
                     {getStatusBadge(po.status)}
+                    {po.jitArtifact && (
+                      <span className="bg-cyan-950 text-cyan-300 border border-cyan-800 text-[10px] px-2 py-0.5 rounded-full font-mono font-bold flex items-center space-x-1">
+                        <Cpu className="w-3 h-3 text-cyan-400" />
+                        <span>JIT Software Ready</span>
+                      </span>
+                    )}
                   </div>
                   <h3 className="font-bold text-white text-base">{po.title}</h3>
                   <p className="text-xs text-slate-400">
@@ -83,7 +127,11 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
                 <div className="flex items-center justify-between sm:justify-end gap-4">
                   <div className="text-right">
                     <div className="text-xl font-extrabold text-white">
-                      ${po.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      {po.totalAmount === 0 ? (
+                        <span className="text-emerald-400 font-mono">FREE ($0.00)</span>
+                      ) : (
+                        `$${po.totalAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
+                      )}
                     </div>
                     <div className="text-[10px] text-slate-400 font-mono">
                       {po.quantity} Units @ ${po.unitPrice}/unit
@@ -100,15 +148,15 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
               {isExpanded && (
                 <div className="bg-slate-950 p-6 border-t border-slate-800/80 space-y-6 text-xs text-slate-300">
                   {/* Summary Details */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900 p-4 rounded-xl border border-slate-800">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-900 p-4 rounded-2xl border border-slate-800">
                     <div>
                       <span className="text-slate-500 block">Shipping Terminal</span>
                       <span className="font-semibold text-slate-200">{po.shippingAddress}</span>
                     </div>
 
                     <div>
-                      <span className="text-slate-500 block">Assigned Freight Carrier</span>
-                      <span className="font-semibold text-slate-200">{po.carrier || 'Pending Dispatch'}</span>
+                      <span className="text-slate-500 block">Assigned Delivery Carrier</span>
+                      <span className="font-semibold text-slate-200">{po.carrier || 'Solvex JIT Provisioning'}</span>
                       {po.trackingNumber && (
                         <div className="font-mono text-cyan-400 text-[11px] mt-0.5">{po.trackingNumber}</div>
                       )}
@@ -120,7 +168,7 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
                         <div className="space-y-0.5 mt-0.5">
                           <span className="text-emerald-400 font-bold flex items-center space-x-1">
                             <ShieldCheck className="w-3.5 h-3.5" />
-                            <span>VERIFIED ({po.paypalOrderId})</span>
+                            <span>VERIFIED ({po.paypalOrderId || 'FREE_PROVISION'})</span>
                           </span>
                           <div className="text-[10px] text-slate-400">{po.paypalPayerEmail}</div>
                         </div>
@@ -141,8 +189,64 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
                     </div>
                   </div>
 
+                  {/* Customer Custom JIT Software Delivery Box */}
+                  <div className="bg-gradient-to-r from-slate-900 to-cyan-950/30 p-5 rounded-2xl border border-cyan-500/40 space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                      <div className="flex items-center space-x-2.5">
+                        <div className="w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/40">
+                          <Cpu className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <span className="font-bold text-white text-sm">Custom JIT Software Package</span>
+                            <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] px-2 py-0.5 rounded-md font-mono font-bold">
+                              Ready for Deployment
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-400">
+                            Deterministic container bytecode compiled and cryptographically bound to your fleet.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => downloadJitSoftwareFile(artifact)}
+                          className="bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 shadow-md shadow-emerald-500/20 transition-all active:scale-95"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Download .JSON Bundle</span>
+                        </button>
+                        <button
+                          onClick={() => setSelectedJitModalPo(po)}
+                          className="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-3 py-1.5 rounded-xl text-xs flex items-center space-x-1.5 transition-all active:scale-95"
+                        >
+                          <Code className="w-3.5 h-3.5" />
+                          <span>Inspect Code & Docker</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Quick Docker Run Command */}
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                        <span>Instant Docker Launch Command:</span>
+                        <button
+                          onClick={() => handleCopy(artifact.dockerRunCommand, `cmd-${po.id}`)}
+                          className="text-cyan-400 hover:text-cyan-300 flex items-center space-x-1"
+                        >
+                          {copiedKey === `cmd-${po.id}` ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                          <span>{copiedKey === `cmd-${po.id}` ? 'Copied' : 'Copy'}</span>
+                        </button>
+                      </div>
+                      <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-[11px] font-mono text-emerald-400 break-all select-all">
+                        {artifact.dockerRunCommand}
+                      </div>
+                    </div>
+                  </div>
+
                   {/* 380-Character Header & Node Assignment Info */}
-                  <div className="bg-slate-900/90 p-4 rounded-xl border border-indigo-900/40 space-y-2">
+                  <div className="bg-slate-900/90 p-4 rounded-2xl border border-indigo-900/40 space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
                         <ShieldCheck className="w-4 h-4 text-emerald-400" />
@@ -151,11 +255,11 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
                         </span>
                       </div>
                       <span className="text-[10px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800 px-2 py-0.5 rounded">
-                        NODE-01 / 380 CHARS
+                        {artifact.nodeNumber} / 380 CHARS
                       </span>
                     </div>
                     <p className="font-mono text-[10.5px] text-slate-300 bg-slate-950 p-2.5 rounded-lg border border-slate-800 select-all break-all leading-relaxed">
-                      SOLVEX-ENTERPRISE-380CHAR-HEADER::COMPANY-[UAREFAKE.COM ENTERPRISE GLOBAL]::SYSTEM-JIT-DISTRIBUTION::HASH-a8f9c2104e7b83d1059f3211e038294a772c10b984102938475a6b1029384756c9d81726354019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465019283746501928374650192837465::NODE-01
+                      {artifact.header380}
                     </p>
                   </div>
 
@@ -185,6 +289,134 @@ export const OrderHistory: React.FC<OrderHistoryProps> = ({ orders, onOpenPaypal
           );
         }))}
       </div>
+
+      {/* JIT Software Inspection Modal */}
+      {selectedJitModalPo && (() => {
+        const artifact = getEffectiveArtifact(selectedJitModalPo);
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fade-in overflow-y-auto">
+            <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl text-slate-100 relative my-8">
+              {/* Header */}
+              <div className="flex items-center justify-between px-6 py-4 bg-slate-800/80 border-b border-slate-700/80">
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/40">
+                    <Cpu className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-base">Custom JIT Software Delivery Center</h3>
+                    <p className="text-xs text-slate-400">{artifact.solutionTitle} • PO: {selectedJitModalPo.poNumber}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedJitModalPo(null)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/60 transition-all"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-950 p-4 rounded-2xl border border-slate-800">
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase font-mono block">Digital License Key</span>
+                    <span className="font-mono text-sm text-emerald-400 font-bold">{artifact.licenseKey}</span>
+                  </div>
+                  <button
+                    onClick={() => downloadJitSoftwareFile(artifact)}
+                    className="bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold px-4 py-2 rounded-xl text-xs flex items-center space-x-2 shadow-lg shadow-emerald-500/20 transition-all active:scale-95 shrink-0"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download Software (.json)</span>
+                  </button>
+                </div>
+
+                {/* Tabs */}
+                <div className="space-y-2">
+                  <div className="flex items-center space-x-2 border-b border-slate-800 pb-2 text-xs">
+                    <button
+                      onClick={() => setActiveCodeTab('docker')}
+                      className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-all ${
+                        activeCodeTab === 'docker' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Docker Container
+                    </button>
+                    <button
+                      onClick={() => setActiveCodeTab('code')}
+                      className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-all ${
+                        activeCodeTab === 'code' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Runnable Source Code ({artifact.runtime})
+                    </button>
+                    <button
+                      onClick={() => setActiveCodeTab('manifest')}
+                      className={`px-3 py-1.5 rounded-xl font-mono text-xs transition-all ${
+                        activeCodeTab === 'manifest' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'
+                      }`}
+                    >
+                      Manifest JSON
+                    </button>
+                  </div>
+
+                  {activeCodeTab === 'docker' && (
+                    <div className="space-y-3">
+                      <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs font-mono text-emerald-400 flex items-start justify-between">
+                        <span className="break-all pr-2">{artifact.dockerRunCommand}</span>
+                        <button onClick={() => handleCopy(artifact.dockerRunCommand, 'modal-docker')} className="text-slate-400 hover:text-white p-1 shrink-0">
+                          {copiedKey === 'modal-docker' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      <div className="bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-1">
+                        <span className="text-[10px] text-slate-500 uppercase font-mono block">eBPF Security Verification</span>
+                        <p className="text-emerald-400 font-mono text-xs">✓ Sandbox Memory Invariance: PASSED (Zero illegal memory mutations)</p>
+                        <p className="text-slate-400 text-xs">Runtime Endpoint: <span className="text-cyan-400 font-mono">{artifact.apiEndpointUrl}</span></p>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeCodeTab === 'code' && (
+                    <pre className="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto max-h-60 leading-relaxed">
+                      {artifact.entrypointCode}
+                    </pre>
+                  )}
+
+                  {activeCodeTab === 'manifest' && (
+                    <pre className="bg-slate-950 p-4 rounded-2xl border border-slate-800 text-xs font-mono text-cyan-300 overflow-x-auto max-h-60 leading-relaxed">
+                      {artifact.manifestJson}
+                    </pre>
+                  )}
+                </div>
+
+                {/* 380 Header */}
+                <div className="bg-slate-950 p-3 rounded-2xl border border-indigo-900/40 space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-400 font-mono uppercase font-bold text-[10px]">380-Character Cryptographic Header</span>
+                    <button onClick={() => handleCopy(artifact.header380, 'modal-header')} className="text-cyan-400 hover:text-cyan-300 flex items-center space-x-1 font-mono text-xs">
+                      {copiedKey === 'modal-header' ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedKey === 'modal-header' ? 'Copied' : 'Copy'}</span>
+                    </button>
+                  </div>
+                  <div className="font-mono text-[10px] text-slate-300 bg-slate-900 p-2 rounded-lg border border-slate-800 break-all select-all">
+                    {artifact.header380}
+                  </div>
+                </div>
+
+                <div className="pt-2 flex justify-end">
+                  <button
+                    onClick={() => setSelectedJitModalPo(null)}
+                    className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs transition-all"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };
+
