@@ -3,6 +3,7 @@ import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import { ALL_210_SOLUTIONS } from './src/data/catalogGenerator.js';
 import { INITIAL_ORDERS, INITIAL_SHIPMENTS, INITIAL_ERP_INTEGRATIONS } from './src/data/solvexData.js';
+import { INITIAL_COMPANY_NODES, generate380CharHeader, CompanyNode } from './src/utils/nodeHeader.js';
 import { PurchaseOrder, Shipment, SupplierBid } from './src/types/index.js';
 import {
   initNeonDatabase,
@@ -24,6 +25,7 @@ let ordersStore: PurchaseOrder[] = [...INITIAL_ORDERS];
 let shipmentsStore: Shipment[] = [...INITIAL_SHIPMENTS];
 let solutionsStore = [...ALL_210_SOLUTIONS];
 let integrationsStore = [...INITIAL_ERP_INTEGRATIONS];
+let nodesStore: CompanyNode[] = [...INITIAL_COMPANY_NODES];
 
 async function startServer() {
   const app = express();
@@ -263,6 +265,83 @@ async function startServer() {
     }
   });
 
+  // --- COMPANY HARDWARE & DEVICE NODE FLEET ENDPOINTS ---
+  // GET /api/nodes - Fetch all registered nodes in the fleet
+  app.get('/api/nodes', (req, res) => {
+    res.json(nodesStore);
+  });
+
+  // POST /api/nodes and /api/nodes/register - Register a new device node with 380-character header
+  const handleRegisterNode = (req: express.Request, res: express.Response) => {
+    try {
+      const {
+        nodeNumber,
+        companyName,
+        deviceName,
+        location,
+        assignedSoftware,
+        companyMainHeader,
+        ipAddress,
+        status,
+        poId
+      } = req.body;
+
+      const nextNodeNum = nodeNumber || `NODE-${String(nodesStore.length + 1).padStart(2, '0')}`;
+      const header380 = (companyMainHeader && companyMainHeader.length === 380)
+        ? companyMainHeader
+        : generate380CharHeader(nextNodeNum, companyName || 'uarefake.com Enterprise Core');
+
+      const newNode: CompanyNode = {
+        id: req.body.id || `node-${Date.now()}`,
+        nodeNumber: nextNodeNum,
+        companyName: companyName || 'uarefake.com Enterprise Core',
+        companyMainHeader: header380,
+        deviceName: deviceName || `Solvex Node Terminal ${nextNodeNum}`,
+        location: location || 'Company Facility / Data Center',
+        assignedSoftware: assignedSoftware || 'Solvex JIT Software Suite',
+        poId: poId || `po-auto-${Math.floor(1000 + Math.random() * 9000)}`,
+        status: status || 'Active',
+        lastPing: 'Just registered',
+        ipAddress: ipAddress || `10.240.0.${20 + nodesStore.length}`
+      };
+
+      // Check if node exists and update, or unshift new
+      const existingIdx = nodesStore.findIndex(n => n.id === newNode.id || n.nodeNumber === newNode.nodeNumber);
+      if (existingIdx >= 0) {
+        nodesStore[existingIdx] = newNode;
+      } else {
+        nodesStore.unshift(newNode);
+      }
+
+      res.status(201).json({
+        success: true,
+        message: `Node ${newNode.nodeNumber} (${newNode.deviceName}) successfully registered in fleet registry`,
+        node: newNode,
+        totalNodesCount: nodesStore.length
+      });
+    } catch (err: any) {
+      console.error('Node Registration Error:', err);
+      res.status(500).json({ error: 'Failed to register device node', details: err.message });
+    }
+  };
+
+  app.post('/api/nodes', handleRegisterNode);
+  app.post('/api/nodes/register', handleRegisterNode);
+  app.post('/api/node/register', handleRegisterNode);
+
+  // DELETE /api/nodes/:id - Delete a node from the registry
+  app.delete('/api/nodes/:id', (req, res) => {
+    const { id } = req.params;
+    const initialLen = nodesStore.length;
+    nodesStore = nodesStore.filter(n => n.id !== id && n.nodeNumber !== id);
+
+    if (nodesStore.length === initialLen) {
+      return res.status(404).json({ error: 'Node not found in registry' });
+    }
+
+    res.json({ success: true, message: `Node ${id} removed from fleet registry`, totalNodesCount: nodesStore.length });
+  });
+
   // --- DAISY HAMINJA / BDC-PROJECT-API-SERVER ROUTE AUDIT ENDPOINTS ---
   // System Status & Route Audit: bdc-project-api-server / SolveX Autonomous Enterprise Platform
 
@@ -470,6 +549,10 @@ async function startServer() {
 
   app.post('/api/daisy/procure', handleDaisyProcure);
   app.post('/api/ai/procure', handleDaisyProcure);
+  app.post('/api/procure', handleDaisyProcure);
+  app.post('/api/ai/augmentation', handleDaisyProcure);
+  app.post('/api/ai/augment', handleDaisyProcure);
+  app.post('/api/solutions/augment', handleDaisyProcure);
   // Alias for backward compatibility
   app.post('/api/gemini/procure', handleDaisyProcure);
 

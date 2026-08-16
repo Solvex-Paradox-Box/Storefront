@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Server, ShieldCheck, Copy, Check, Cpu, Zap, Activity, HardDrive, Plus, MapPin, Search, ExternalLink, RefreshCw } from 'lucide-react';
+import { Server, ShieldCheck, Copy, Check, Cpu, Zap, Activity, HardDrive, Plus, MapPin, Search, ExternalLink, RefreshCw, AlertCircle } from 'lucide-react';
 import { CompanyNode, generate380CharHeader } from '../utils/nodeHeader';
 
 interface CompanyNodeTrackerProps {
@@ -11,6 +11,8 @@ export const CompanyNodeTracker: React.FC<CompanyNodeTrackerProps> = ({ nodes, o
   const [copiedHeaderId, setCopiedHeaderId] = useState<string | null>(null);
   const [searchFilter, setSearchFilter] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // New Node Form state
   const [deviceName, setDeviceName] = useState('');
@@ -23,30 +25,57 @@ export const CompanyNodeTracker: React.FC<CompanyNodeTrackerProps> = ({ nodes, o
     setTimeout(() => setCopiedHeaderId(null), 2500);
   };
 
-  const handleCreateNode = (e: React.FormEvent) => {
+  const handleCreateNode = async (e: React.FormEvent) => {
     e.preventDefault();
-    const nextNodeNumber = `NODE-${String(nodes.length + 1).padStart(2, '0')}`;
-    const header = generate380CharHeader(nextNodeNumber);
+    setSubmitting(true);
+    setErrorMessage(null);
 
-    const newNode: CompanyNode = {
-      id: `node-${Date.now()}`,
+    const nextNodeNumber = `NODE-${String(nodes.length + 1).padStart(2, '0')}`;
+    const header = generate380CharHeader(nextNodeNumber, 'uarefake.com Enterprise Core');
+
+    const nodePayload = {
       nodeNumber: nextNodeNumber,
       companyName: 'uarefake.com Enterprise Core',
       companyMainHeader: header,
-      deviceName: deviceName || `Solvex Node Terminal ${nextNodeNumber}`,
-      location: location || 'Company Facility / Data Center',
-      assignedSoftware: assignedSoftware || 'Solvex JIT Software Suite',
+      deviceName: deviceName.trim() || `Solvex Node Terminal ${nextNodeNumber}`,
+      location: location.trim() || 'Company Facility / Data Center',
+      assignedSoftware: assignedSoftware.trim() || 'Solvex JIT Software Suite',
       poId: `po-auto-${Math.floor(1000 + Math.random() * 9000)}`,
-      status: 'Active',
-      lastPing: 'Just created',
+      status: 'Active' as const,
       ipAddress: `10.240.0.${20 + nodes.length}`
     };
 
-    onAddNode(newNode);
-    setDeviceName('');
-    setLocation('');
-    setAssignedSoftware('');
-    setShowAddModal(false);
+    try {
+      const res = await fetch('/api/nodes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nodePayload)
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        const savedNode: CompanyNode = data.node || {
+          ...nodePayload,
+          id: `node-${Date.now()}`,
+          lastPing: 'Just created'
+        };
+        onAddNode(savedNode);
+        setDeviceName('');
+        setLocation('');
+        setAssignedSoftware('');
+        setErrorMessage(null);
+        setShowAddModal(false);
+      } else {
+        const msg = data.error || data.details || `Server returned HTTP ${res.status}: Failed to register node.`;
+        setErrorMessage(msg);
+      }
+    } catch (err: any) {
+      console.error('Node registration network error:', err);
+      setErrorMessage(err.message || 'Network error: Failed to connect to /api/nodes endpoint.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const filteredNodes = nodes.filter(
@@ -255,6 +284,16 @@ export const CompanyNodeTracker: React.FC<CompanyNodeTrackerProps> = ({ nodes, o
               </button>
             </div>
 
+            {errorMessage && (
+              <div className="bg-rose-950/80 border border-rose-500/60 rounded-xl p-3.5 flex items-start space-x-2.5 text-rose-200 text-xs">
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="font-bold text-rose-300">Registration Failed:</span>
+                  <p>{errorMessage}</p>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleCreateNode} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">
@@ -314,9 +353,17 @@ export const CompanyNodeTracker: React.FC<CompanyNodeTrackerProps> = ({ nodes, o
                 </button>
                 <button
                   type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/30"
+                  disabled={submitting}
+                  className="bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-lg shadow-indigo-600/30 flex items-center space-x-2"
                 >
-                  Confirm & Provision Node
+                  {submitting ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      <span>Provisioning Node...</span>
+                    </>
+                  ) : (
+                    <span>Confirm & Provision Node</span>
+                  )}
                 </button>
               </div>
             </form>

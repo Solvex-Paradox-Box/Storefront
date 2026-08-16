@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Plus, Sparkles, DollarSign, Building2, Tag } from 'lucide-react';
+import { X, Plus, Sparkles, DollarSign, Building2, Tag, AlertCircle, RefreshCw } from 'lucide-react';
 import { SolutionItem } from '../types';
 
 interface AddSolutionModalProps {
@@ -24,25 +24,30 @@ export const AddSolutionModal: React.FC<AddSolutionModalProps> = ({
   const [paradoxResolution, setParadoxResolution] = useState('');
   const [featuresStr, setFeaturesStr] = useState('Instant PayPal Settlement, AI Dynamic Pricing, Webhook EDI Sync');
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !price) return;
+    if (!title.trim() || !price) {
+      setErrorMessage('Title and Price are required fields.');
+      return;
+    }
 
     setSubmitting(true);
+    setErrorMessage(null);
 
     const payload = {
       itemType,
-      title,
+      title: title.trim(),
       category,
-      vendor: vendor || 'Enterprise Partner',
+      vendor: vendor.trim() || 'Enterprise Partner',
       price: Number(price) || 0,
       pricingModel,
-      description: description || 'Autonomous enterprise system capability.',
-      fullDescription: fullDescription || description || 'Autonomous enterprise system capability.',
-      paradoxResolution: itemType === 'Paradox Solution' ? paradoxResolution : undefined,
+      description: description.trim() || 'Autonomous enterprise system capability.',
+      fullDescription: fullDescription.trim() || description.trim() || 'Autonomous enterprise system capability.',
+      paradoxResolution: itemType === 'Paradox Solution' ? paradoxResolution.trim() : undefined,
       features: featuresStr.split(',').map(f => f.trim()).filter(Boolean),
       specs: {
         'Deployment': 'Instant Container Node',
@@ -58,8 +63,10 @@ export const AddSolutionModal: React.FC<AddSolutionModalProps> = ({
         body: JSON.stringify(payload)
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (res.ok) {
-        const newItem = await res.json();
+        const newItem = data.item || data;
         onItemAdded(newItem);
         onClose();
         // Reset form
@@ -68,9 +75,14 @@ export const AddSolutionModal: React.FC<AddSolutionModalProps> = ({
         setDescription('');
         setFullDescription('');
         setParadoxResolution('');
+        setErrorMessage(null);
+      } else {
+        const msg = data.error || data.message || `Server returned HTTP ${res.status}: Method or Request failed.`;
+        setErrorMessage(msg);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error adding solution:', err);
+      setErrorMessage(err.message || 'Network error: Failed to connect to /api/solutions endpoint.');
     } finally {
       setSubmitting(false);
     }
@@ -86,8 +98,8 @@ export const AddSolutionModal: React.FC<AddSolutionModalProps> = ({
               <Plus className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-white">Add Item to Solvex Marketplace</h3>
-              <p className="text-xs text-slate-400">Publish your custom paradox solution or ready-to-go business template</p>
+              <h3 className="text-xl font-bold text-white">Publish Solution to Marketplace</h3>
+              <p className="text-xs text-slate-400">Register new paradox solution or ready-to-go business template on uarefake.com</p>
             </div>
           </div>
           <button
@@ -97,6 +109,17 @@ export const AddSolutionModal: React.FC<AddSolutionModalProps> = ({
             <X className="w-5 h-5" />
           </button>
         </div>
+
+        {/* Error Alert Box */}
+        {errorMessage && (
+          <div className="bg-rose-950/80 border border-rose-500/60 rounded-xl p-4 flex items-start space-x-3 text-rose-200 text-xs animate-fade-in">
+            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-bold text-rose-300">Solution Submission Error:</span>
+              <p className="leading-relaxed">{errorMessage}</p>
+            </div>
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
@@ -267,8 +290,17 @@ export const AddSolutionModal: React.FC<AddSolutionModalProps> = ({
               disabled={submitting || !title || !price}
               className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-600/30 flex items-center space-x-2"
             >
-              <Plus className="w-4 h-4" />
-              <span>{submitting ? 'Publishing...' : 'Publish Item to Marketplace'}</span>
+              {submitting ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>Publishing...</span>
+                </>
+              ) : (
+                <>
+                  <Plus className="w-4 h-4" />
+                  <span>Publish Item to Marketplace</span>
+                </>
+              )}
             </button>
           </div>
         </form>

@@ -117,14 +117,15 @@ export const SolutionCatalog: React.FC<SolutionCatalogProps> = ({
 
           <div className="flex items-center space-x-3 justify-between md:justify-end">
             <div className="text-xs font-mono text-cyan-400/80">
-              Nexus Index: <span className="text-white font-bold">{filteredSolutions.length}</span> Active Nodes • <span className="text-cyan-300 font-semibold">uarefake.space Sync</span>
+              Nexus Index: <span className="text-white font-bold">{filteredSolutions.length}</span> Active Items • <span className="text-cyan-300 font-semibold">uarefake.space Sync</span>
             </div>
             <button
               onClick={() => setIsAddModalOpen(true)}
               className="bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/50 px-3 py-1.5 rounded-xl text-xs font-mono flex items-center space-x-1.5 transition-all shadow"
+              title="Publish a new Paradox Solution or Business Template to the Marketplace"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Register Node</span>
+              <span>Publish Solution</span>
             </button>
           </div>
         </div>

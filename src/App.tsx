@@ -141,6 +141,11 @@ export default function App() {
       .then(res => res.json())
       .then(data => Array.isArray(data) && setIntegrations(data))
       .catch(() => {});
+
+    fetch('/api/nodes')
+      .then(res => res.json())
+      .then(data => Array.isArray(data) && data.length > 0 && setCompanyNodes(data))
+      .catch(() => {});
   }, []);
 
   const refreshOrdersAndShipments = () => {
@@ -152,6 +157,11 @@ export default function App() {
     fetch('/api/shipments')
       .then(res => res.json())
       .then(data => Array.isArray(data) && setShipments(data))
+      .catch(() => {});
+
+    fetch('/api/nodes')
+      .then(res => res.json())
+      .then(data => Array.isArray(data) && data.length > 0 && setCompanyNodes(data))
       .catch(() => {});
   };
 
@@ -168,7 +178,15 @@ export default function App() {
   };
 
   const handleAddNode = (newNode: CompanyNode) => {
-    setCompanyNodes(prev => [...prev, newNode]);
+    setCompanyNodes(prev => {
+      const idx = prev.findIndex(n => n.id === newNode.id || n.nodeNumber === newNode.nodeNumber);
+      if (idx >= 0) {
+        const next = [...prev];
+        next[idx] = newNode;
+        return next;
+      }
+      return [newNode, ...prev];
+    });
     addToast({
       title: 'Company Device Node Provisioned',
       message: `Node ${newNode.nodeNumber} assigned for ${newNode.deviceName} (${newNode.location}).`,

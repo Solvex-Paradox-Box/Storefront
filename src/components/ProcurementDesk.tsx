@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Cpu, Send, RefreshCw, CheckCircle2, Shield, DollarSign, Truck, AlertTriangle, ArrowRight, Sparkles, FileCheck } from 'lucide-react';
+import { Cpu, Send, RefreshCw, CheckCircle2, Shield, DollarSign, Truck, AlertTriangle, ArrowRight, Sparkles, FileCheck, AlertCircle } from 'lucide-react';
 import { ProcurementAiResponse, SupplierBid, PurchaseOrder } from '../types';
 
 interface ProcurementDeskProps {
@@ -20,6 +20,8 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
   const [aiResult, setAiResult] = useState<ProcurementAiResponse | null>(null);
   const [selectedSupplier, setSelectedSupplier] = useState<SupplierBid | null>(null);
   const [createdPo, setCreatedPo] = useState<PurchaseOrder | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [poError, setPoError] = useState<string | null>(null);
 
   const samplePrompts = [
     'Procure 50 bdc-project-api-server sovereign microservice nodes with Neon DB vector synchronization for enterprise deployment.',
@@ -29,12 +31,17 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
 
   const handleRunAiProcurement = async (customPrompt?: string) => {
     const activePrompt = customPrompt || promptInput;
-    if (!activePrompt.trim()) return;
+    if (!activePrompt.trim()) {
+      setAiError('Please enter a procurement or AI augmentation prompt before submitting.');
+      return;
+    }
 
     setLoadingAi(true);
     setAiResult(null);
     setCreatedPo(null);
     setSelectedSupplier(null);
+    setAiError(null);
+    setPoError(null);
 
     try {
       const res = await fetch('/api/daisy/procure', {
@@ -48,8 +55,12 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
         })
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Daisy Haminja autonomous procurement request failed');
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const errorMsg = data.error || data.details || `Server returned HTTP ${res.status}: Method or Request failed.`;
+        throw new Error(errorMsg);
+      }
 
       setAiResult(data);
       if (data.recommendedSuppliers && data.recommendedSuppliers.length > 0) {
@@ -57,6 +68,7 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
       }
     } catch (err: any) {
       console.error('Procurement error:', err);
+      setAiError(err.message || 'Network error: Failed to connect to /api/daisy/procure or /api/ai/augmentation endpoint.');
     } finally {
       setLoadingAi(false);
     }
@@ -64,6 +76,7 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
 
   const handleCreatePurchaseOrder = async () => {
     if (!aiResult || !selectedSupplier) return;
+    setPoError(null);
 
     try {
       const res = await fetch('/api/orders', {
@@ -81,11 +94,17 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
         })
       });
 
-      const newPo = await res.json();
+      const newPo = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(newPo.error || `Server returned HTTP ${res.status}: Failed to create purchase order.`);
+      }
+
       setCreatedPo(newPo);
       onOrderCreated(newPo);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Create PO Error:', err);
+      setPoError(err.message || 'Failed to submit purchase order to /api/orders endpoint.');
     }
   };
 
@@ -151,6 +170,17 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
             </button>
           ))}
         </div>
+
+        {/* Error Alert for AI Procurement / Augmentation */}
+        {aiError && (
+          <div className="bg-rose-950/80 border border-rose-500/60 rounded-xl p-4 flex items-start space-x-3 text-rose-200 text-xs animate-fade-in">
+            <AlertCircle className="w-5 h-5 text-rose-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-bold text-rose-300">Procurement / Augmentation Request Error:</span>
+              <p className="leading-relaxed">{aiError}</p>
+            </div>
+          </div>
+        )}
 
         {/* Procurement Parameters */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
@@ -298,6 +328,16 @@ export const ProcurementDesk: React.FC<ProcurementDeskProps> = ({
             </div>
 
             {/* Action Bar */}
+            {poError && (
+              <div className="bg-rose-950/80 border border-rose-500/60 rounded-xl p-3.5 flex items-start space-x-2.5 text-rose-200 text-xs">
+                <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <span className="font-bold text-rose-300">Purchase Order Generation Error:</span>
+                  <p>{poError}</p>
+                </div>
+              </div>
+            )}
+
             <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
               <div>
                 {selectedSupplier && (
