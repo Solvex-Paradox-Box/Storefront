@@ -22,6 +22,7 @@ import { AIRegistryViewer } from './components/AIRegistryViewer';
 import { MmtaiSecurityView } from './components/MmtaiSecurityView';
 import { JitBuildView } from './components/JitBuildView';
 import { FreedomSimView } from './components/FreedomSimView';
+import { SovereignLotVaultView } from './components/SovereignLotVaultView';
 import { 
   SolutionItem, 
   PurchaseOrder, 
@@ -66,7 +67,7 @@ export default function App() {
   });
 
   const [activeTab, setActiveTab] = useState<ActiveTabType>(() => {
-    return domainMode === 'space' ? 'brain' : 'catalog';
+    return domainMode === 'space' ? 'brain' : 'paradox-vault';
   });
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -444,6 +445,14 @@ export default function App() {
         {/* ========================================================================= */}
         {/* USER FRONT STORE (.COM) TABS                                              */}
         {/* ========================================================================= */}
+
+        {/* 105 Real Sovereign Lots Floor (Paradox Vault) */}
+        {activeTab === 'paradox-vault' && (
+          <SovereignLotVaultView
+            onSelectSolutionForPurchase={handleOpenPaypalForSolution}
+            onNavigateTab={(tab) => setActiveTab(tab as ActiveTabType)}
+          />
+        )}
 
         {activeTab === 'catalog' && (
           <SolutionCatalog

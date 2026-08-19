@@ -8,6 +8,7 @@ import { DomainGuideModal } from './DomainGuideModal';
 export type DomainMode = 'com' | 'space';
 
 export type ActiveTabType = 
+  | 'paradox-vault'
   | 'catalog' 
   | 'rfq' 
   | 'marketplace-exchange'
@@ -214,6 +215,20 @@ export const Header: React.FC<HeaderProps> = ({
                 <span>[uarefake.com Storefront]:</span>
               </div>
 
+              {/* Paradox Vault (105 Real Lots Floor) */}
+              <button
+                onClick={() => setActiveTab('paradox-vault')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold font-mono transition-all whitespace-nowrap ${
+                  activeTab === 'paradox-vault'
+                    ? 'bg-amber-400 text-black shadow-lg shadow-amber-500/40 ring-1 ring-amber-300'
+                    : 'text-amber-300 hover:text-white hover:bg-amber-500/20 border border-amber-500/40'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Paradox Vault (105 Lots)</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </button>
+
               {/* Solutions Catalog */}
               <button
                 onClick={() => setActiveTab('catalog')}
@@ -303,6 +318,20 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-purple-400 mr-1 flex items-center space-x-1">
                 <span>[uarefake.space Admin]:</span>
               </div>
+
+              {/* Paradox Vault (105 Real Lots Floor) */}
+              <button
+                onClick={() => setActiveTab('paradox-vault')}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-bold font-mono transition-all whitespace-nowrap ${
+                  activeTab === 'paradox-vault'
+                    ? 'bg-amber-400 text-black shadow-lg shadow-amber-500/40 ring-1 ring-amber-300'
+                    : 'text-amber-300 hover:text-white hover:bg-amber-500/20 border border-amber-500/40'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Paradox Vault (105 Lots)</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </button>
 
               {/* Freedom SIM AI OS (SwarmOS Sovereign) */}
               <button
